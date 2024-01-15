@@ -222,7 +222,7 @@ int ropen(const char *pathname, int flags) {
 
             free(pre_path_node->dirs);
             pre_path_node->dirs = temp;
-            root->dir_num++;
+            pre_path_node->dir_num++;
             file = temp[top];
         }
         int fd_top = find_unuse_fd();
@@ -323,7 +323,7 @@ int rmkdir(const char *pathname) {
 
     free(pre_path_node->dirs);
     pre_path_node->dirs = temp;
-    root->dir_num++;
+    pre_path_node->dir_num++;
     return 0;
 }
 
