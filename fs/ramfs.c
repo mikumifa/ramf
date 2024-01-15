@@ -319,7 +319,7 @@ int rmkdir(const char *pathname) {
     free(pre_path_node->dirs);
     pre_path_node->dirs = temp;
     root->dir_num++;
-
+    return 0;
 }
 
 int rrmdir(const char *pathname) {
