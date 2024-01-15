@@ -1,32 +1,23 @@
 #include "ramfs.h"
 #include "shell.h"
-#include <assert.h>
 #include <string.h>
+#include <stdlib.h>
+#include <assert.h>
 
-extern node *root;
-const char *content = "export PATH=$PATH:/usr/bin/\n";
-const char *ct = "export PATH=/home:$PATH";
 int main() {
-  init_ramfs();
+    init_ramfs();
+    init_shell();
 
-  smkdir("/home");
-  smkdir("/home/ubuntu");
-  smkdir("/usr");
-  smkdir("/usr/bin");
-  stouch("/home/ubuntu/.bashrc");
-  rwrite(ropen("/home/ubuntu/.bashrc", O_WRONLY), content, strlen(content));
-  rwrite(ropen("/home/ubuntu/.bashrc", O_WRONLY | O_APPEND), ct, strlen(ct));
-  scat("/home/ubuntu/.bashrc");
+    assert(sls("/home") == 1);
+    assert(scat("/home/ubuntu/.bashrc") == 1);
+    assert(scat("/") == 1);
+    assert(smkdir("/home") == 0);
+    assert(smkdir("/test/1") == 1);
+    assert(stouch("/home/1") == 0);
+    assert(smkdir("/home/1/1") == 1);
+    assert(stouch("/test/1") == 1);
+    assert(swhich("notexist") == 1);
 
-  init_shell();
-  swhich("ls");
-  stouch("/usr/bin/ls");
-  swhich("ls");
-  stouch("/home/ls");
-  swhich("ls");
-  secho("hello world");
-  secho("The Environment Variable PATH is:\\$PATH");
-  close_ramfs();
-  close_shell();
-  assert(root==NULL);
+    close_shell();
+    close_ramfs();
 }
