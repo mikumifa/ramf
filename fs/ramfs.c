@@ -316,7 +316,7 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
     context_extend(fdesc[fd].f->content, offset + count);
     fdesc[fd].offset = offset + count;
     for (int i = 0; i < count; ++i) {
-        fdesc[fd].f->content[i + offset] = ((char)(buf[i]));
+        fdesc[fd].f->content[i + offset] = buf[i];
     }
 }
 
