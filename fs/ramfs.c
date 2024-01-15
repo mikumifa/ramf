@@ -284,9 +284,6 @@ off_t rseek(int fd, off_t offset, int whence) {
 
 
 int rmkdir(const char *pathname) {
-    if (pathname == NULL || strcmp(pathname, "") == 0) {
-        return -1; // 无效的路径
-    }
     node *existing = find(pathname);
     if (existing != NULL) {
         return -1; // 存在
