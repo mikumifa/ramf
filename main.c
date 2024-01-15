@@ -16,5 +16,7 @@ int main() {
     assert(rmkdir("/home/ubuntu") == 0);
     assert(rmkdir("/usr") == 0);
     assert(rmkdir("/usr/bin") == 0);
-    assert(ropen("/usr/bin",O_APPEND) == -1);
+    assert(ropen("/usr/bin/12",O_APPEND) == -1);
+    assert(ropen("/usr/bin/12",O_APPEND) == -1);
+
 }
