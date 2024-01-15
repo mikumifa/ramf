@@ -18,6 +18,6 @@ int main() {
     assert(rmkdir("/usr/bin") == 0);
     assert(ropen("/usr/bin/12",O_APPEND) == -1);
     assert(ropen("/usr/bin/12",O_CREAT) == 0);
-    assert(ropen("/usr/bin/12",O_APPEND) == -1);
+    assert(ropen("/usr/bin/12",O_APPEND) == 0);
 
 }
