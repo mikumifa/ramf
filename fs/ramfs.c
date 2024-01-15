@@ -16,7 +16,16 @@ char parts[MAX_PATH_PARTS][FILENAME_MAX];
 void free_node(node *pre, node *n);
 
 int is_valid_char(char c) {
-    return isalnum(c) || c == '.'; // 只允许字母、数字和点号
+    return isalnum(c) || c == '.' || c == '/'; // 只允许字母、数字和点号
+}
+
+int is_vaild_str(char *str) {
+    int len = strlen(str);
+    for (int i = 0; i < len; ++i) {
+        if (!is_valid_char(str[i]))
+            return 0;
+    }
+    return 1;
 }
 
 int find_unuse_fd() {
@@ -176,7 +185,8 @@ node *find(const char *pathname) {
 }
 
 int ropen(const char *pathname, int flags) {
-
+    if (!is_vaild_str(pathname))
+        return -1;
 
     if (flags & O_APPEND) {
 //追加
@@ -290,6 +300,8 @@ off_t rseek(int fd, off_t offset, int whence) {
 
 
 int rmkdir(const char *pathname) {
+    if (!is_vaild_str(pathname))
+        return -1;
     node *existing = find(pathname);
     if (existing != NULL) {
         return -1; // 存在

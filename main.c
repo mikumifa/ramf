@@ -12,7 +12,7 @@ int main() {
     assert(rmkdir("/home") == 0);
     assert(rmkdir("//home") == -1);
     assert(rmkdir("/test/1") == -1);
-    assert(rmkdir("/home/ub*untu") == 0);
+    assert(rmkdir("/home/ubuntu") == 0);
     assert(rmkdir("/usr") == 0);
     assert(rmkdir("/usr/bin") == 0);
 }
