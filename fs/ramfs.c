@@ -50,6 +50,8 @@ node *getPrePath(const char *pathname) {
     strncpy(pre_path, pathname, pos + 1);
     node *pre_path_node = find(pre_path);
     free(pre_path);
+    if (pre_path_node == NULL)
+        return root;
     return pre_path_node;
 }
 
