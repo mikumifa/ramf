@@ -15,23 +15,16 @@ char parts[MAX_PATH_PARTS][FILENAME_MAX];
 
 void free_node(node *pre, node *n);
 
-void context_extend(char **context, int size) {
-
-    int len = strlen(*context);
-    if (size <= len) {
-        return; // 如果新的长度不大于原始长度，则不需要扩展
+int context_extend(void **content, int size) {
+    if (content == NULL || *content == NULL) {
+        *content = malloc(size);
+    } else {
+        *content = realloc(*content, size);
     }
-    char *temp = (char *) malloc(sizeof(char) * (size + 1));
-    if (temp == NULL) {
-        return; // 内存分配失败
+    if (*content == NULL) {
+        return 0; // 失败
     }
-    strcpy(temp, *context);
-    for (int i = len; i < size; ++i) {
-        temp[i] = '\0';
-    }
-    temp[size] = '\0';
-    free(*context);
-    *context = temp;
+    return 1; // 成功
 }
 
 
@@ -312,25 +305,62 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         return -1;
     if (fdesc[fd].f->type == DIR_NODE)
         return -1;
+
     int offset = fdesc[fd].offset;
-    context_extend(fdesc[fd].f->content, offset + count);
-    fdesc[fd].offset = offset + count;
-    for (int i = 0; i < count; ++i) {
-        fdesc[fd].f->content[i + offset] = buf[i];
+    if (!context_extend(&(fdesc[fd].f->content), offset + count))
+        return -1; // 扩展失败
+
+    char *char_content = (char *) fdesc[fd].f->content;
+    const char *char_buf = (const char *) buf;
+    for (size_t i = 0; i < count; ++i) {
+        char_content[i + offset] = char_buf[i];
     }
+
+    fdesc[fd].offset += count;
+    return count; // 返回写入的字节数
 }
+
 
 ssize_t rread(int fd, void *buf, size_t count) {
     if (fd >= NRFD || fdesc[fd].used == 0)
         return -1;
     if (fdesc[fd].f->type == DIR_NODE)
         return -1;
-
+    int offset = fdesc[fd].offset;
+    char *char_content = (char *) fdesc[fd].f->content;
+    ssize_t max_read = fdesc[fd].f->size - offset;
+    if (max_read < 0) max_read = 0;
+    ssize_t to_read = count < max_read ? count : max_read;
+    memcpy(buf, char_content + offset, to_read);
+    fdesc[fd].offset += to_read;
+    return to_read; // 返回实际读取的字节数
 }
+
 
 off_t rseek(int fd, off_t offset, int whence) {
     if (fd >= NRFD || fdesc[fd].used == 0)
         return -1;
+
+    int new_offset;
+    switch (whence) {
+        case SEEK_SET:
+            new_offset = offset;
+            break;
+        case SEEK_CUR:
+            new_offset = fdesc[fd].offset + offset;
+            break;
+        case SEEK_END:
+            new_offset = fdesc[fd].f->size + offset;
+            break;
+        default:
+            return -1;
+    }
+
+    if (new_offset < 0 || new_offset > fdesc[fd].f->size)
+        return -1; // 超出文件范围
+
+    fdesc[fd].offset = new_offset;
+    return new_offset;
 }
 
 
