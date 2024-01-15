@@ -155,14 +155,17 @@ node *find(const char *pathname) {
     for (int i = 0; i < len; ++i) {
         if (now_dir->type == FILE_NODE)
             return NULL;
+        int canFind = 0;
         for (int k = 0; k < now_dir->dir_num; ++k) {
             if (strcmp(now_dir->dirs[k]->name, parts[i]) == 0) {
                 // 找到匹配的子节点，递归继续查找
                 now_dir = now_dir->dirs[k];
-                continue;
+                canFind = 1;
+                break;
             }
         }
-        return NULL;
+        if (canFind == 0)
+            return NULL;
 
     }
     int path_len = strlen(pathname);
