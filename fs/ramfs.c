@@ -159,8 +159,9 @@ node *find(const char *pathname) {
                 now_dir = now_dir->dirs[k];
                 continue;
             }
-            return NULL;
         }
+        return NULL;
+
     }
     int path_len = strlen(pathname);
     if (pathname[path_len - 1] == '/') {
