@@ -199,7 +199,9 @@ int ropen(const char *pathname, int flags) {
         node *file = find(pathname);
         if (file == NULL) {
             node *pre_path_node = getPrePath(pathname);
-            if (pre_path_node != NULL && pre_path_node->type == FILE_NODE)
+            if (pre_path_node == NULL)
+                return -1;
+            if (pre_path_node->type == FILE_NODE)
                 return -1;
             //找到最后一个然后添加最后一个
             int len = split_pathname(pathname);
@@ -296,7 +298,9 @@ int rmkdir(const char *pathname) {
 
 
     node *pre_path_node = getPrePath(pathname);
-    if (pre_path_node != NULL && pre_path_node->type == FILE_NODE)
+    if (pre_path_node == NULL)
+        return -1;
+    if (pre_path_node->type == FILE_NODE)
         return -1;
 
     //找到最后一个然后添加最后一个
