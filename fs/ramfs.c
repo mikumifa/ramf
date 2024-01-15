@@ -141,6 +141,6 @@ void free_node(node *n) {
 
 void close_ramfs() {
     free_node(root);
-    root=NULL
+    root=NULL;
 }
 
