@@ -47,11 +47,9 @@ int findFirstLastPathPos(const char *pathname) {
 node *getPrePath(const char *pathname) {
     int pos = findFirstLastPathPos(pathname);
     char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
-    strncpy(pre_path, pathname, pos + 1);
+    strncpy(pre_path, pathname, pos);
     node *pre_path_node = find(pre_path);
     free(pre_path);
-    if (pre_path_node == NULL)
-        return root;
     return pre_path_node;
 }
 
