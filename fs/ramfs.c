@@ -4,7 +4,6 @@
 #include <endian.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tools.h"
 
 node *root = NULL;
 
