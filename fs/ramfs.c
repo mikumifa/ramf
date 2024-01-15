@@ -10,6 +10,18 @@ node *root = NULL;
 
 #define NRFD 4096
 FD fdesc[NRFD];
+//tools
+char *strdup(const char *s) {
+    if (s == NULL) {
+        return NULL;
+    }
+    char *duplicate = malloc(strlen(s) + 1);
+    if (duplicate == NULL) {
+        return NULL;
+    }
+    strcpy(duplicate, s);
+    return duplicate;
+}
 
 node *find(const char *pathname) {
     // NULL
