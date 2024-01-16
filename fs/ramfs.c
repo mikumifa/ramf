@@ -69,6 +69,7 @@ node *getPrePath(const char *pathname) {
     int pos = findFirstLastPathPos(pathname);
     char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
     strncpy(pre_path, pathname, pos);
+    pre_path[pos] = '\0';
     node *pre_path_node = find(pre_path);
     free(pre_path);
     return pre_path_node;
@@ -96,7 +97,7 @@ int split_pathname(const char *pathname) {
                 isInCount = 0;
                 //加入
                 strncpy(parts[part_count], pathname + countStartPos, i - countStartPos);
-                parts[part_count][i-countStartPos]='\0';
+                parts[part_count][i - countStartPos] = '\0';
                 part_count++;
             } else {
                 continue;
@@ -199,7 +200,7 @@ node *find(const char *pathname) {
 }
 
 int ropen(const char *pathname, int flags) {
-    if (!is_vaild_str((char*)pathname))
+    if (!is_vaild_str((char *) pathname))
         return -1;
 
     if (flags & O_APPEND) {
@@ -330,9 +331,9 @@ ssize_t rread(int fd, void *buf, size_t count) {
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(buf, char_content + offset, count);
     int buf_len = strlen(buf);
-    int ret_len=buf_len > count ? count : strlen(buf); // 返回实际读取的字节数
+    int ret_len = buf_len > count ? count : strlen(buf); // 返回实际读取的字节数
     fdesc[fd].offset += ret_len;
-    return  ret_len;
+    return ret_len;
 }
 
 
