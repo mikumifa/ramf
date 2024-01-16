@@ -57,7 +57,6 @@ int sls(const char *pathname) {
         dir = find("/");
     } else {
         dir = find(pathname);
-        return 0;
     }
 
     if (find_state == 1) {
@@ -68,9 +67,11 @@ int sls(const char *pathname) {
         return 1;
     }
     if (dir->type == FILE_NODE) {
+        return 0;
         printf("%s\n", pathname);
         return 0;
     } else {
+        return 0;
         int len = dir->dir_num;
         for (int i = 0; i < len; ++i) {
             if (i != len - 1) {
