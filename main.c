@@ -8,5 +8,5 @@
 int main() {
     init_ramfs();
     init_shell();
-    printf("%s", getPrePathFromFullPath("/12"));
+    printf("%s", getPrePathFromFullPath("///12"));
 }
