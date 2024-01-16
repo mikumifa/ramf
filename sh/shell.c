@@ -23,6 +23,16 @@ typedef struct PathNode {
 PathNode *pathHead = NULL;
 extern char **parts;
 
+char *getPrePathFromFullPath(const char *path) {
+    int pos = findFirstLastPathPos(path);
+    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
+    if (pos <= 0)
+        pos = 1;
+    strncpy(pre_path, path, pos);
+    pre_path[pos] = '\0';
+    return pre_path;
+}
+
 void addPathNode(PathNode **head, char *path, int atStart) {
     PathNode *newNode = malloc(sizeof(PathNode));
     newNode->path = strdup(path); // 复制路径字符串
@@ -63,10 +73,7 @@ int sls(const char *pathname) {
     } else {
         dir = find(pathname);
     }
-    int pos = findFirstLastPathPos(pathname);
-    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
-    strncpy(pre_path, pathname, pos);
-    pre_path[pos] = '\0';
+    char *pre_path = getPrePathFromFullPath(pathname);
     int state = pathOk(pre_path);
     free(pre_path);
 
@@ -100,10 +107,7 @@ int sls(const char *pathname) {
 
 int scat(const char *pathname) {
     print("cat %s\n", pathname);
-    int pos = findFirstLastPathPos(pathname);
-    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
-    strncpy(pre_path, pathname, pos);
-    pre_path[pos] = '\0';
+    char *pre_path = getPrePathFromFullPath(pathname);
     int state = pathOk(pathname);
     free(pre_path);
     if (state == 1) {
@@ -136,10 +140,7 @@ int smkdir(const char *pathname) {
     }
     //如何能找到前面的文件夹
 
-    int pos = findFirstLastPathPos(pathname);
-    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
-    strncpy(pre_path, pathname, pos);
-    pre_path[pos] = '\0';
+    char *pre_path = getPrePathFromFullPath(pathname);
     int state = pathOk(pre_path);
     free(pre_path);
 
@@ -159,10 +160,7 @@ int smkdir(const char *pathname) {
 
 int stouch(const char *pathname) {
     print("touch %s\n", pathname);
-    int pos = findFirstLastPathPos(pathname);
-    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
-    strncpy(pre_path, pathname, pos);
-    pre_path[pos] = '\0';
+    char *pre_path = getPrePathFromFullPath(pathname);
     int state = pathOk(pre_path);
     free(pre_path);
     if (state == 1) {
