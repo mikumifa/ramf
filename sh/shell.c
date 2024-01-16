@@ -116,7 +116,7 @@ int smkdir(const char *pathname) {
 
     node *pre_path_node = getPrePath(pathname);
     if (pre_path_node == NULL || pre_path_node->type == FILE_NODE) {
-        printf("mkdir: cannot create directory '%s': No a directory\n", pathname);
+        printf("mkdir: cannot create directory '%s': Not a directory\n", pathname);
         return 1;
     }
     if (rmkdir(pathname) == -1) {
