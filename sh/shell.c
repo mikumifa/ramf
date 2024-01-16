@@ -99,7 +99,6 @@ int scat(const char *pathname) {
         for (int i = 0; i < file->size; ++i) {
             putchar(char_content[i]);
         }
-        puts("\n");
         return 0;
     }
 }
