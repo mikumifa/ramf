@@ -99,7 +99,7 @@ int scat(const char *pathname) {
         for (int i = 0; i < file->size; ++i) {
             putchar(char_content[i]);
         }
-        puts("/n");
+        puts("\n");
         return 0;
     }
 }
@@ -238,7 +238,7 @@ int swhich(const char *cmd) {
         } else {
             for (int i = 0; i < dir->dir_num; ++i) {
                 if (dir->dirs[i]->type == FILE_NODE && strcmp(dir->dirs[i]->name, cmd) == 0) {
-                    printf("%s\n", current->path);
+                    printf("%s/%s\n", current->path, cmd);
                     return 0;
                 }
             }
