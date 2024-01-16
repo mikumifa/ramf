@@ -57,6 +57,7 @@ int sls(const char *pathname) {
         dir = find("/");
     } else {
         dir = find(pathname);
+        return 0;
     }
 
     if (find_state == 1) {
