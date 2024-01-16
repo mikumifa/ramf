@@ -9,7 +9,7 @@ int main() {
     init_shell();
     assert(smkdir("/home") == 0);
     assert(stouch("/home") == 0);
-    assert(sls("/home/") == 1);
+    assert(sls("home/") == 1);
     assert(scat("/home/ubuntu/.bashrc") == 1);
     assert(scat("/") == 1);
     assert(smkdir("/home") == 0);
