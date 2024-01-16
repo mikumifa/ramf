@@ -22,16 +22,9 @@ typedef struct PathNode {
 } PathNode;
 PathNode *pathHead = NULL;
 extern char **parts;
-
-char *getPrePathFromFullPath(const char *path) {
-    int pos = findFirstLastPathPos(path);
-    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
-    if (pos <= 0)
-        pos = 1;
-    strncpy(pre_path, path, pos);
-    pre_path[pos] = '\0';
-    return pre_path;
-}
+extern int find_state;
+extern int make_dir_state;
+extern int pre_path_state;
 
 void addPathNode(PathNode **head, char *path, int atStart) {
     PathNode *newNode = malloc(sizeof(PathNode));
@@ -69,25 +62,19 @@ int sls(const char *pathname) {
     node *dir;
     if (*pathname == '\0') {
         dir = find("/");
-
     } else {
         dir = find(pathname);
     }
-    char *pre_path = getPrePathFromFullPath(pathname);
-    int state = pathOk(pre_path);
-    free(pre_path);
 
-    if (state == 1) {
+
+    if (find_state == 1) {
         printf("ls: cannot access '%s': Not a directory\n", pathname);
         return 1;
-    } else if (state == 2) {
+    } else if (find_state == 2) {
         printf("ls: cannot access '%s': No such file or directory\n", pathname);
         return 1;
     }
-    if (dir == NULL) {
-        printf("ls: cannot access '%s': No such file or directory\n", pathname);
-        return 1;
-    }
+
     if (dir->type == FILE_NODE) {
         printf("%s\n", dir->name);
         return 0;
@@ -107,17 +94,16 @@ int sls(const char *pathname) {
 
 int scat(const char *pathname) {
     print("cat %s\n", pathname);
-    char *pre_path = getPrePathFromFullPath(pathname);
-    int state = pathOk(pathname);
-    free(pre_path);
-    if (state == 1) {
+
+    node *file = find(pathname);
+    if (find_state == 1) {
         printf("cat: %s: Is a directory\n", pathname);
         return 1;
-    } else if (state == 2) {
+    } else if (find_state == 2) {
         printf("cat: %s: No such file or directory\n", pathname);
         return 1;
     }
-    node *file = find(pathname);
+
     if (file->type == DIR_NODE) {
         printf("cat: %s: Is a directory\n", pathname);
         return 1;
@@ -138,16 +124,11 @@ int smkdir(const char *pathname) {
         printf("mkdir: cannot create directory '%s': File exists\n", pathname);
         return 1; // 存在
     }
-    //如何能找到前面的文件夹
 
-    char *pre_path = getPrePathFromFullPath(pathname);
-    int state = pathOk(pre_path);
-    free(pre_path);
-
-    if (state == 1) {
+    if (find_state == 1) {
         printf("mkdir: cannot create directory '%s': Not a directory\n", pathname);
         return 1;
-    } else if (state == 2) {
+    } else if (find_state == 2) {
         printf("mkdir: cannot create directory '%s': No such file or directory\n", pathname);
         return 1;
     }
@@ -160,19 +141,26 @@ int smkdir(const char *pathname) {
 
 int stouch(const char *pathname) {
     print("touch %s\n", pathname);
-    char *pre_path = getPrePathFromFullPath(pathname);
-    int state = pathOk(pre_path);
-    free(pre_path);
-    if (state == 1) {
-        printf("touch: cannot touch '%s': Not a directory\n", pathname);
-        return 1;
-    } else if (state == 2) {
-        printf("touch: cannot touch '%s': No such file or directory\n", pathname);
-        return 1;
+    node *existing = find(pathname);
+    if (existing != NULL) {
+        //如果存在，啥也不用做
+        return 0;
+
+    } else {
+        //创建一个文件
+        //这个时候肯定不是根，如果是跟，肯定可以找到
+        node *prePath = getPrePath(pathname);
+        if (pre_path_state == 1) {
+            printf("touch: cannot touch '%s': Not a directory\n", pathname);
+            return 1;
+        } else if (find_state == 2) {
+            printf("touch: cannot touch '%s': No such file or directory\n", pathname);
+            return 1;
+        }
+        int fd = ropen(pathname, O_CREAT);
+        rclose(fd);
+        return 0;
     }
-    int fd = ropen(pathname, O_CREAT);
-    rclose(fd);
-    return 0;
 }
 
 char *strndup(const char *s, size_t n) {

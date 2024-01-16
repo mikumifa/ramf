@@ -69,7 +69,6 @@ void free_node(node *pre, node *n);
 
 node *getPrePath(const char *pathname);
 
-int pathOk(const char *);
 
 int split_pathname(const char *pathname);
 

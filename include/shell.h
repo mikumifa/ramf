@@ -12,7 +12,6 @@ int secho(const char *content);
 
 int swhich(const char *cmd);
 
-char *getPrePathFromFullPath(const char *path);
 
 void init_shell();
 

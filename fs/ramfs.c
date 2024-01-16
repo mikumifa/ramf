@@ -12,7 +12,9 @@ FD fdesc[NRFD];
 #define MAX_PATH_PARTS 100
 #define FILENAME_MAX 100
 char parts[MAX_PATH_PARTS][FILENAME_MAX];
-
+int find_state = 0;
+int make_dir_state = 0;
+int pre_path_state = 0;
 
 int context_extend(void **content, int size) {
     if (content == NULL || *content == NULL) {
@@ -65,6 +67,10 @@ int findFirstLastPathPos(const char *pathname) {
     return -1;
 }
 
+//成功状态0
+//调用前保证当前目录不能是跟目录
+//先前的path有文件或者当前是文件 1
+//先前的path不存在 2
 node *getPrePath(const char *pathname) {
     int pos = findFirstLastPathPos(pathname);
     char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
@@ -72,36 +78,24 @@ node *getPrePath(const char *pathname) {
     pre_path[pos] = '\0';
     node *pre_path_node = find(pre_path);
     free(pre_path);
-    return pre_path_node;
-}
 
-//没问题 0
-//如果先前的path里面有file充当path是1
-//如果先前的path里面有不存在的事2
-int pathOk(const char *pathname) {
-    int len = split_pathname(pathname);
-    if (len == -1)
-        return 2;
-    node *now_dir = root;
-    for (int i = 0; i < len; ++i) {
-        if (now_dir->type == FILE_NODE)
-            return 1;
-        int canFind = 0;
-        for (int k = 0; k < now_dir->dir_num; ++k) {
-            if (strcmp(now_dir->dirs[k]->name, parts[i]) == 0) {
-                // 找到匹配的子节点，递归继续查找
-                now_dir = now_dir->dirs[k];
-                canFind = 1;
-                break;
-            }
+    //判断前面情况，
+    if (find_state == 0) {
+        //最后还要保证
+        if (pre_path_node->type == DIR_NODE) {
+            pre_path_state = 1;
+            return NULL;
         }
-        if (canFind == 0)
-            return 2;
-
+        pre_path_state = 0;
+        return pre_path_node;
+    } else if (find_state == 1) {
+        pre_path_state = 1;
+        return NULL;
+    } else if (find_state == 2) {
+        pre_path_state = 2;
+        return NULL;
     }
-    if (now_dir->type == FILE_NODE)
-        return 1;
-    return 0;
+
 }
 
 //切割出来，有问题返回-1，
@@ -162,50 +156,19 @@ char *strdup(const char *s) {
     return duplicate;
 }
 
-//node *find_recursive(node *current, const char *path) {
-//    if (current == NULL || path == NULL) {
-//        return NULL;
-//    }
-//    //路径是空的
-//    if (*path == '\0') {
-//        return NULL;
-//    }
-//    //第一个必须是‘/’
-//    if (*path != '/') {
-//        return NULL;
-//    }
-//
-//    // 下一个还是就到下一个
-//    if (*(path + 1) == '/')
-//        return find_recursive(current, path + 1);
-//
-//    char *nameHead = path + 1;
-//    char *next = strchr(nameHead, '/');
-//    //找到求，没找到就是到底
-//    int nameLen = next ? (next - nameHead) : strlen(nameHead);
-//    //当前是nameHead开始
-//    // 对于每个子节点
-//    for (int i = 0; i < current->dir_num; ++i) {
-//        if (strncmp(current->dirs[i]->name, nameHead, nameLen) == 0 && current->dirs[i]->name[nameLen] == '\0') {
-//            // 找到匹配的子节点，递归继续查找
-//            return current->dirs[i];
-//        }
-//    }
-//    return NULL; // 没找到
-//}
-
-
-//node *find(const char *pathname) {
-//    return find_recursive(root, pathname);
-//}
 node *find(const char *pathname) {
     int len = split_pathname(pathname);
-    if (len == -1)
-        return NULL;
+    if (len == -1) {
+        exit(-1);
+        //不应该出现这种情况
+    }
+
     node *now_dir = root;
     for (int i = 0; i < len; ++i) {
-        if (now_dir->type == FILE_NODE)
+        if (now_dir->type == FILE_NODE) {
+            find_state = 1;
             return NULL;
+        }
         int canFind = 0;
         for (int k = 0; k < now_dir->dir_num; ++k) {
             if (strcmp(now_dir->dirs[k]->name, parts[i]) == 0) {
@@ -215,16 +178,22 @@ node *find(const char *pathname) {
                 break;
             }
         }
-        if (canFind == 0)
+        if (canFind == 0) {
+            find_state = 2;
             return NULL;
+
+        }
 
     }
     int path_len = strlen(pathname);
     if (pathname[path_len - 1] == '/') {
         //如果最后一个是’/‘,找到的FILE不能算
-        if (now_dir->type == FILE_NODE)
+        if (now_dir->type == FILE_NODE) {
+            find_state = 1;
             return NULL;
+        }
     }
+    find_state = 0;
     return now_dir;
 }
 
@@ -252,10 +221,9 @@ int ropen(const char *pathname, int flags) {
 // 读模式
         node *file = find(pathname);
         if (file == NULL) {
+            //不是根目录，如果是的话，绝对可以找到
             node *pre_path_node = getPrePath(pathname);
             if (pre_path_node == NULL)
-                return -1;
-            if (pre_path_node->type == FILE_NODE)
                 return -1;
             //找到最后一个然后添加最后一个
             int len = split_pathname(pathname);
@@ -394,22 +362,27 @@ off_t rseek(int fd, off_t offset, int whence) {
     return new_offset;
 }
 
-
+//make_dir_state
+//正常 0
+//这个绝对地址中包含了一个文件而非目录 1
+//这个绝对地址中包含了不存在的文件目录 2
+//最终指向的文件/目录已经存在 3
 int rmkdir(const char *pathname) {
-    if (!is_vaild_str(pathname))
+    if (!is_vaild_str(pathname)) {
+        make_dir_state = 2;
         return -1;
+    }
     node *existing = find(pathname);
     if (existing != NULL) {
+        make_dir_state = 3;
         return -1; // 存在
     }
+
     //如何能找到前面的文件夹
-
-
     node *pre_path_node = getPrePath(pathname);
     if (pre_path_node == NULL)
         return -1;
-    if (pre_path_node->type == FILE_NODE)
-        return -1;
+
 
     //找到最后一个然后添加最后一个
     int len = split_pathname(pathname);
@@ -437,7 +410,6 @@ int rmkdir(const char *pathname) {
 
 int rrmdir(const char *pathname) {
     node *target = find(pathname);
-
     if (target == NULL) {
         return -1; // 目录不存在
     }
@@ -453,6 +425,7 @@ int rrmdir(const char *pathname) {
     if (target->dir_num > 0) {
         return -1; // 目录不为空
     }
+    //这一部肯定找到，只要能找到当前，说明前面的prePath没问题，并且不存在更目录情况
     node *pre_path_node = getPrePath(pathname);
     free_node(pre_path_node, target);
     return 0; // 成功
