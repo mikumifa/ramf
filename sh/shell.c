@@ -63,7 +63,7 @@ int sls(const char *pathname) {
     } else {
         dir = find(pathname);
     }
-    if (pathname == NULL) {
+    if (dir == NULL) {
         printf("ls: cannot access '%s': No such file or directory\n", pathname);
         return 1;
     }
