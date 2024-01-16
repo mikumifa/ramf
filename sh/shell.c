@@ -130,7 +130,7 @@ int stouch(const char *pathname) {
     print("touch %s\n", pathname);
     int fd = ropen(pathname, O_CREAT);
     if (fd == -1) {
-        printf("touch: cannot touch '%s': No such file or directory", pathname);
+        printf("touch: cannot touch '%s': No such file or directory\n", pathname);
         return 1;
     }
     rclose(fd);
