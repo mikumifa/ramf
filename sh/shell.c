@@ -130,7 +130,7 @@ int smkdir(const char *pathname) {
     } else if (make_dir_state == 3) {
         printf("mkdir: cannot create directory '%s': File exists\n", pathname);
         return 1; // 存在
-    } else{
+    } else {
         return 0;
     }
 }
@@ -226,6 +226,7 @@ int secho(const char *content) {
     return 0;
 }
 
+
 int swhich(const char *cmd) {
     print("which %s\n", cmd);
     PathNode *current = pathHead;
@@ -236,7 +237,11 @@ int swhich(const char *cmd) {
         } else {
             for (int i = 0; i < dir->dir_num; ++i) {
                 if (dir->dirs[i]->type == FILE_NODE && strcmp(dir->dirs[i]->name, cmd) == 0) {
-                    printf("%s/%s\n", current->path, cmd);
+                    int len = split_pathname(current->path);
+                    for (int j = 0; j < len; ++j) {
+                        printf("/%s", parts[j]);
+                    }
+                    printf("/%s\n", cmd);
                     return 0;
                 }
             }
