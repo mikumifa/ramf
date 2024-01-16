@@ -17,6 +17,7 @@ int main() {
     assert(smkdir("/3") == 0);
     assert(sls("/") == 0);
     assert(sls("") == 0);
+    assert(sls("/2") == 0);
 
     assert(smkdir("/2/1") == 0);
     assert(smkdir("/2/1/1") == 0);
