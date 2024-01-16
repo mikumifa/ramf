@@ -95,7 +95,9 @@ int split_pathname(const char *pathname) {
             if (isInCount) {
                 isInCount = 0;
                 //加入
-                strncpy(parts[part_count++], pathname + countStartPos, i - countStartPos);
+                strncpy(parts[part_count], pathname + countStartPos, i - countStartPos);
+                parts[part_count][i-countStartPos]='\0';
+                part_count++;
             } else {
                 continue;
             }
