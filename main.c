@@ -10,9 +10,11 @@ int main() {
 
     assert(sls("/home") == 1);
 
-    assert(smkdir("/home") == 0);
-    assert(smkdir("/test/1") == 1);
-    assert(smkdir("/home/1/1") == 1);
+    assert(smkdir("/1") == 0);
+    assert(smkdir("/1/1") == 0);
+    assert(smkdir("/2") == 0);
+    assert(smkdir("/2/1") == 0);
+    assert(smkdir("/2/1/1") == 0);
 
 
     close_shell();
