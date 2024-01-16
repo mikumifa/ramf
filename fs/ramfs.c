@@ -14,6 +14,64 @@ int find_state;
 int make_dir_state;
 int pre_path_state;
 
+node *create_node(int nodeType, const char *name) {
+    node *newNode = (node *) malloc(sizeof(node));
+    if (newNode == NULL) {
+        return NULL; // 内存分配失败
+    }
+    newNode->type = nodeType;
+    newNode->dirs = NULL;
+    newNode->dir_num = 0;
+    newNode->content = NULL;
+    newNode->size = 0;
+    newNode->name = strdup(name); // 复制名称
+    if (newNode->name == NULL) {
+        free(newNode);
+        return NULL; // 名称分配失败
+    }
+    return newNode;
+}
+
+int add_subdir(node *dir, node *subdir) {
+    if (dir == NULL || subdir == NULL || dir->type != DIR_NODE) {
+        return -1; // 无效的参数
+    }
+
+    // 重新分配内存以容纳新的子目录
+    node **newDirs = realloc(dir->dirs, (dir->dir_num + 1) * sizeof(node *));
+    dir->dirs = newDirs;
+    dir->dirs[dir->dir_num] = subdir;
+    dir->dir_num++;
+
+    return 0; // 成功
+}
+
+int remove_subdir(node *dir, node *subdir) {
+    if (dir == NULL || subdir == NULL || dir->type != DIR_NODE) {
+        return -1; // 无效的参数
+    }
+
+    for (int i = 0; i < dir->dir_num; i++) {
+        if (dir->dirs[i] == subdir) {
+            free(subdir->name);
+            free(subdir);
+            // 将数组中的最后一个元素移动到当前位置
+            dir->dirs[i] = dir->dirs[dir->dir_num - 1];
+            dir->dir_num--;
+
+            node **newDirs = realloc(dir->dirs, dir->dir_num * sizeof(node *));
+            if (newDirs != NULL || dir->dir_num == 0) {
+                dir->dirs = newDirs;
+            }
+
+            return 0; // 成功
+        }
+    }
+
+    return -1; // 未找到子目录
+}
+
+
 int have_same_name(const char *name, node *dir) {
     for (int i = 0; i < dir->dir_num; ++i) {
         if (strcmp(dir->name, name) == 0)
@@ -228,23 +286,9 @@ int ropen(const char *pathname, int flags) {
                 return -1; // 存在
             }
             //添加一个
-            node **temp = (node **) malloc(sizeof(node *) * pre_path_node->dir_num + 1);
-            int top = 0;
-            for (int i = 0; i < pre_path_node->dir_num; ++i) {
-                temp[top++] = pre_path_node->dirs[i];
-            }
-            temp[top] = (node *) malloc(sizeof(node));
-            temp[top]->type = FILE_NODE;
-            temp[top]->dir_num = 0;
-            temp[top]->name = strdup(dir_name);
-            temp[top]->content = strdup("");
-            temp[top]->size = 0;
-            temp[top]->dirs = NULL;
-
-            free(pre_path_node->dirs);
-            pre_path_node->dirs = temp;
-            pre_path_node->dir_num++;
-            file = temp[top];
+            node *new_node = create_node(FILE_NODE, dir_name);
+            add_subdir(pre_path_node, new_node);
+            file = new_node;
         } else {
             if (file->type == DIR_NODE)
                 return -1;
@@ -417,22 +461,8 @@ int rmkdir(const char *pathname) {
         return -1; // 存在
     }
     //添加一个
-//    node **temp = (node **) malloc(sizeof(node *) * pre_path_node->dir_num + 1);
-//    int top = 0;
-//    for (int i = 0; i < pre_path_node->dir_num; ++i) {
-//        temp[top++] = pre_path_node->dirs[i];
-//    }
-//    temp[top] = (node *) malloc(sizeof(node));
-//    temp[top]->type = DIR_NODE;
-//    temp[top]->dir_num = 0;
-//    temp[top]->name = strdup(dir_name);
-//    temp[top]->content = NULL;
-//    temp[top]->size = 0;
-//    temp[top]->dirs = NULL;
-//    free(pre_path_node->dirs);
-//    pre_path_node->dirs = temp;
-//    pre_path_node->dir_num++;
-    make_dir_state = 0;
+    node *new_node = create_node(FILE_NODE, dir_name);
+    add_subdir(pre_path_node, new_node);
     return 0;
 }
 
