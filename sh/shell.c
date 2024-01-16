@@ -32,7 +32,7 @@ char *strdup(const char *s) {
 
 void addPathNode(PathNode **head, char *path, int atStart) {
     PathNode *newNode = malloc(sizeof(PathNode));
-    newNode->path = strdup(path); // 复制路径字符串
+    newNode->path = strdup((const char *) path); // 复制路径字符串
     newNode->next = NULL;
 
     if (atStart || *head == NULL) {
