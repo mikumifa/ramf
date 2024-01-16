@@ -35,23 +35,17 @@ int add_subdir(node *dir, node *subdir) {
 }
 
 int remove_subdir(node *dir, node *subdir) {
-    if (dir == NULL || subdir == NULL || dir->type != DIR_NODE) {
-        return -1; // 无效的参数
-    }
-
     for (int i = 0; i < dir->dir_num; i++) {
         if (dir->dirs[i] == subdir) {
             free(subdir->name);
+            free(subdir->content);
             free(subdir);
             // 将数组中的最后一个元素移动到当前位置
             dir->dirs[i] = dir->dirs[dir->dir_num - 1];
             dir->dir_num--;
 
             node **newDirs = realloc(dir->dirs, dir->dir_num * sizeof(node *));
-            if (newDirs != NULL || dir->dir_num == 0) {
-                dir->dirs = newDirs;
-            }
-
+            dir->dirs = newDirs;
             return 0; // 成功
         }
     }
@@ -473,7 +467,7 @@ int rrmdir(const char *pathname) {
     }
     //这一部肯定找到，只要能找到当前，说明前面的prePath没问题，并且不存在更目录情况
     node *pre_path_node = getPrePath(pathname);
-    free_node(pre_path_node, target);
+    remove_subdir(pre_path_node, target);
     return 0; // 成功
 }
 
