@@ -92,7 +92,7 @@ int scat(const char *pathname) {
         return 1;
     }
     if (file->type == DIR_NODE) {
-        printf("cat: %s: Is a directory", pathname);
+        printf("cat: %s: Is a directory\n", pathname);
         return 1;
     } else {
         char *char_content = (char *) file->content;
