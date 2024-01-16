@@ -67,10 +67,10 @@ int sls(const char *pathname) {
         printf("ls: cannot access '%s': No such file or directory\n", pathname);
         return 1;
     }
-    if (dir == NULL) {
-        printf("ls: cannot access '%s': No such file or directory\n", pathname);
-        return 1;
-    }
+//    if (dir == NULL) {
+//        printf("ls: cannot access '%s': No such file or directory\n", pathname);
+//        return 1;
+//    }
 
     if (dir->type == FILE_NODE) {
         printf("%s\n", pathname);
@@ -78,11 +78,11 @@ int sls(const char *pathname) {
     } else {
         int len = dir->dir_num;
         for (int i = 0; i < len; ++i) {
-            if (i != len - 1) {
-                printf("%s  ", (char *) dir->dirs[i]->name);
-            } else {
-                printf("%s\n", (char *) dir->dirs[i]->name);
-            }
+//            if (i != len - 1) {
+//                printf("%s  ", (char *) dir->dirs[i]->name);
+//            } else {
+//                printf("%s\n", (char *) dir->dirs[i]->name);
+//            }
         }
         return 0;
     }
