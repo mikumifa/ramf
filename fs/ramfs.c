@@ -321,34 +321,34 @@ int rclose(int fd) {
     return 0;
 }
 
-ssize_t rwrite(int fd, const void *buf, size_t count) {
-    //偏移量指向的事下一个的位置
-    if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
-        return -1;
-    if (fdesc[fd].f->type == DIR_NODE)
-        return -1;
-    if (!(fdesc[fd].flags & O_WRONLY || fdesc[fd].flags & O_RDWR))
-        return -1;
-    off_t offset = fdesc[fd].offset;
+ssize_t write(int fd, const void *buf, size_t count) {
+    if (fd < 0 || fd >= NRFD || !fdesc[fd].used || !(fdesc[fd].flags & O_WRONLY)) {
+        return -1; // 检查文件描述符有效性和写权限
+    }
 
-    //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
-    if (offset > fdesc[fd].f->size) {
-        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset);
-        char *char_content = (char *) fdesc[fd].f->content;
-        for (int i = fdesc[fd].f->size; i < offset; ++i) {
-            char_content[i] = 0;
+    FD *file_desc = &fdesc[fd];
+    if (file_desc->f->type != FILE_NODE) {
+        return -1; // 不能向目录写入
+    }
+    off_t write_end = file_desc->offset + count;
+    // 检查是否需要扩展空间
+    if (write_end > file_desc->f->size) {
+        // 需要扩展文件的大小
+        void *new_content = realloc(file_desc->f->content, write_end);
+        if (!new_content) {
+            // 无法分配更多空间
+            return -1;
         }
-        fdesc[fd].f->size = offset;
+        // 更新文件内容指针和大小
+        file_desc->f->content = new_content;
+        file_desc->f->size = write_end;
     }
+    // 将数据从buf复制到文件内容的相应位置
+    memcpy(((char *)file_desc->f->content) + file_desc->offset, buf, count);
 
-    //在扩容到可以存下count
-    if (offset + count >= fdesc[fd].f->size) {
-        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset + count);
-        fdesc[fd].f->size = offset + count;
-    }
-    char *char_content = (char *) fdesc[fd].f->content;
-    memcpy(char_content + offset, buf, count);
-    fdesc[fd].offset += count;
+    // 更新文件描述符的偏移量
+    file_desc->offset += count;
+
     return count; // 返回写入的字节数
 }
 
@@ -376,7 +376,7 @@ ssize_t rread(int fd, void *buf, size_t count) {
 off_t rseek(int fd, off_t offset, int whence) {
     if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
         return -1;
-    if (fdesc[fd].f->type == DIR_NODE && whence == SEEK_END)
+    if (fdesc[fd].f->type == DIR_NODE)
         return -1;
     int new_offset;
     switch (whence) {
