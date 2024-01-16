@@ -60,13 +60,13 @@ int sls(const char *pathname) {
     }
 
 
-    if (find_state == 1) {
-        printf("ls: cannot access '%s': Not a directory\n", pathname);
-        return 1;
-    } else if (find_state == 2) {
-        printf("ls: cannot access '%s': No such file or directory\n", pathname);
-        return 1;
-    }
+//    if (find_state == 1) {
+//        printf("ls: cannot access '%s': Not a directory\n", pathname);
+//        return 1;
+//    } else if (find_state == 2) {
+//        printf("ls: cannot access '%s': No such file or directory\n", pathname);
+//        return 1;
+//    }
     if (dir == NULL) {
 //            printf("ls: cannot access '%s': No such file or directory\n", pathname);
         return 1;
