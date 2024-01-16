@@ -11,9 +11,9 @@ node *root = NULL;
 FD fdesc[NRFD];
 
 extern char parts[MAX_PATH_PARTS][FILENAME_MAX];
-extern int find_state = 0;
-extern int make_dir_state = 0;
-extern int pre_path_state = 0;
+extern int find_state;
+extern int make_dir_state;
+extern int pre_path_state;
 
 int context_extend(void **content, int size) {
     if (content == NULL || *content == NULL) {
