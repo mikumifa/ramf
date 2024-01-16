@@ -9,8 +9,7 @@ node *root = NULL;
 
 #define NRFD 4096
 FD fdesc[NRFD];
-#define MAX_PATH_PARTS 100
-#define FILENAME_MAX 100
+
 char parts[MAX_PATH_PARTS][FILENAME_MAX];
 int find_state = 0;
 int make_dir_state = 0;
