@@ -311,11 +311,7 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         return -1; // 扩展失败
 
     char *char_content = (char *) fdesc[fd].f->content;
-    const char *char_buf = (const char *) buf;
-    for (size_t i = 0; i < count; ++i) {
-        char_content[i + offset] = char_buf[i];
-    }
-
+    memcpy(char_content + offset, buf, count);
     fdesc[fd].offset += count;
     return count; // 返回写入的字节数
 }
