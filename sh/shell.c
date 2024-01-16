@@ -73,7 +73,7 @@ int sls(const char *pathname) {
 //    }
 
     if (dir->type == FILE_NODE) {
-        printf("%s\n", pathname);
+//        printf("%s\n", pathname);
         return 0;
     } else {
         int len = dir->dir_num;
