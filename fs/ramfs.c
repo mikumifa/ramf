@@ -289,83 +289,81 @@ int rclose(int fd) {
 
 ssize_t rwrite(int fd, const void *buf, size_t count) {
     //偏移量指向的事下一个的位置
-//    if (fd >= NRFD || fdesc[fd].used == 0)
-//        return -1;
-//    if (fdesc[fd].f->type == DIR_NODE)
-//        return -1;
-//    if (!(fdesc[fd].flags & O_WRONLY || fdesc[fd].flags & O_RDWR))
-//        return -1;
-//    off_t offset = fdesc[fd].offset;
-//
-//    //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
-//    if (offset > fdesc[fd].f->size) {
-//        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset);
-//        char *char_content = (char *) fdesc[fd].f->content;
-//        for (int i = fdesc[fd].f->size; i < offset; ++i) {
-//            char_content[i] = 0;
-//        }
-//        fdesc[fd].f->size = offset;
-//    }
-//
-//    //在扩容到可以存下count
-//    if (offset + count >= fdesc[fd].f->size) {
-//        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset + count);
-//        fdesc[fd].f->size = offset + count;
-//    }
-//    char *char_content = (char *) fdesc[fd].f->content;
-//    memcpy(char_content + offset, buf, count);
-//    fdesc[fd].offset += count;
-//    return count; // 返回写入的字节数
-    return 0;
+    if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
+        return -1;
+    if (fdesc[fd].f->type == DIR_NODE)
+        return -1;
+    if (!(fdesc[fd].flags & O_WRONLY || fdesc[fd].flags & O_RDWR))
+        return -1;
+    off_t offset = fdesc[fd].offset;
+
+    //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
+    if (offset > fdesc[fd].f->size) {
+        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset);
+        char *char_content = (char *) fdesc[fd].f->content;
+        for (int i = fdesc[fd].f->size; i < offset; ++i) {
+            char_content[i] = 0;
+        }
+        fdesc[fd].f->size = offset;
+    }
+
+    //在扩容到可以存下count
+    if (offset + count >= fdesc[fd].f->size) {
+        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset + count);
+        fdesc[fd].f->size = offset + count;
+    }
+    char *char_content = (char *) fdesc[fd].f->content;
+    memcpy(char_content + offset, buf, count);
+    fdesc[fd].offset += count;
+    return count; // 返回写入的字节数
 }
 
 
 ssize_t rread(int fd, void *buf, size_t count) {
-//    if (fd >= NRFD || fdesc[fd].used == 0)
-//        return -1;
-//    if (fdesc[fd].f->type == DIR_NODE)
-//        return -1;
-//    if (fdesc[fd].flags & O_WRONLY) {
-//        return -1;
-//    }
-//    off_t offset = fdesc[fd].offset;
-//    int left_len = fdesc[fd].f->size - offset;
-//    int read_len = left_len > count ? count : left_len;
-//    char *char_content = (char *) fdesc[fd].f->content;
-//    if (read_len <= 0)
-//        return 0;
-//    memcpy(buf, char_content + offset, read_len);
-//    fdesc[fd].offset += read_len;
-//    return read_len;
+    if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
+        return -1;
+    if (fdesc[fd].f->type == DIR_NODE)
+        return -1;
+    if (fdesc[fd].flags & O_WRONLY) {
+        return -1;
+    }
+    off_t offset = fdesc[fd].offset;
+    int left_len = fdesc[fd].f->size - offset;
+    int read_len = left_len > count ? count : left_len;
+    char *char_content = (char *) fdesc[fd].f->content;
+    if (read_len <= 0)
+        return 0;
+    memcpy(buf, char_content + offset, read_len);
+    fdesc[fd].offset += read_len;
+    return read_len;
     return 0;
 }
 
 
 off_t rseek(int fd, off_t offset, int whence) {
-//    if (fd >= NRFD || fdesc[fd].used == 0)
-//        return -1;
-//
-//    int new_offset;
-//    switch (whence) {
-//        case SEEK_SET:
-//            new_offset = offset;
-//            break;
-//        case SEEK_CUR:
-//            new_offset = fdesc[fd].offset + offset;
-//            break;
-//        case SEEK_END:
-//            new_offset = fdesc[fd].f->size + offset;
-//            break;
-//        default:
-//            return -1;
-//    }
-//
-//    if (new_offset < 0)
-//        return -1;
-//
-//    fdesc[fd].offset = new_offset;
-//    return new_offset;
-    return 0;
+    if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
+        return -1;
+
+    int new_offset;
+    switch (whence) {
+        case SEEK_SET:
+            new_offset = offset;
+            break;
+        case SEEK_CUR:
+            new_offset = fdesc[fd].offset + offset;
+            break;
+        case SEEK_END:
+            new_offset = fdesc[fd].f->size + offset;
+            break;
+        default:
+            return -1;
+    }
+
+    if (new_offset < 0)
+        return -1;
+
+    fdesc[fd].offset = new_offset;
+    return new_offset;
 
 }
 
