@@ -7,7 +7,7 @@
 int main() {
     init_ramfs();
     init_shell();
-    assert(smkdir("/home") == 0);
+    assert(stouch("/home") == 0);
 
     assert(sls("//////////////////home") == 1);
     assert(sls(NULL) == 0);
