@@ -17,7 +17,7 @@ int pre_path_state;
 int have_same_name(const char *name, node *dir) {
     for (int i = 0; i < dir->dir_num; ++i) {
         if (strcmp(dir->name, name) == 0)
-            return 1;
+            return 0;
     }
     return 0;
 }
