@@ -336,14 +336,14 @@ ssize_t rread(int fd, void *buf, size_t count) {
     memcpy(buf, char_content + offset, read_len);
     fdesc[fd].offset += read_len;
     return read_len;
-    return 0;
 }
 
 
 off_t rseek(int fd, off_t offset, int whence) {
     if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
         return -1;
-
+    if (fdesc[fd].f->type == DIR_NODE)
+        return -1;
     int new_offset;
     switch (whence) {
         case SEEK_SET:
