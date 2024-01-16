@@ -100,7 +100,6 @@ node *getPrePath(const char *pathname) {
 
 //切割出来，有问题返回-1，
 //不然返回的是切割的结果
-//文件的末尾不能有’/‘
 int split_pathname(const char *pathname) {
     if (pathname == NULL) {
         return -1;
@@ -159,8 +158,9 @@ char *strdup(const char *s) {
 node *find(const char *pathname) {
     int len = split_pathname(pathname);
     if (len == -1) {
-        exit(-1);
-        //不应该出现这种情况
+        //路径有问题
+        find_state = 2;
+        return NULL;
     }
 
     node *now_dir = root;
@@ -216,8 +216,6 @@ int ropen(const char *pathname, int flags) {
         return fd_top;
     } else if (flags & O_CREAT) {
 // 创建
-
-
 // 读模式
         node *file = find(pathname);
         if (file == NULL) {
@@ -226,6 +224,7 @@ int ropen(const char *pathname, int flags) {
             if (pre_path_node == NULL)
                 return -1;
             //找到最后一个然后添加最后一个
+            //能找到pre路径，说明可以分割，找到最后一个
             int len = split_pathname(pathname);
             char *dir_name = parts[len - 1];
             //添加一个
@@ -379,12 +378,18 @@ int rmkdir(const char *pathname) {
     }
 
     //如何能找到前面的文件夹
+    //不是根目录
     node *pre_path_node = getPrePath(pathname);
-    if (pre_path_node == NULL)
-        return -1;
+    if (pre_path_state == 1) {
+        make_dir_state = 1;
+        return -1; // 存在
+    } else if (pre_path_state == 2) {
+        make_dir_state = 2;
+        return -1; // 存在
+    }
 
-
-    //找到最后一个然后添加最后一个
+    //找到最后一个的名字
+    //找到最后一个然后添加最后一个，冷不可能有问题，至少有一个
     int len = split_pathname(pathname);
     char *dir_name = parts[len - 1];
 
@@ -401,10 +406,10 @@ int rmkdir(const char *pathname) {
     temp[top]->content = NULL;
     temp[top]->size = 0;
     temp[top]->dirs = NULL;
-
     free(pre_path_node->dirs);
     pre_path_node->dirs = temp;
     pre_path_node->dir_num++;
+    make_dir_state = 0;
     return 0;
 }
 

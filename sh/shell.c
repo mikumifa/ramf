@@ -119,24 +119,20 @@ int scat(const char *pathname) {
 
 int smkdir(const char *pathname) {
     print("mkdir %s\n", pathname);
-    node *existing = find(pathname);
-    if (existing != NULL) {
-        printf("mkdir: cannot create directory '%s': File exists\n", pathname);
-        return 1; // 存在
-    }
 
-    if (find_state == 1) {
+    rmkdir(pathname);
+    if (make_dir_state == 1) {
         printf("mkdir: cannot create directory '%s': Not a directory\n", pathname);
         return 1;
-    } else if (find_state == 2) {
+    } else if (make_dir_state == 2) {
         printf("mkdir: cannot create directory '%s': No such file or directory\n", pathname);
         return 1;
+    } else if (make_dir_state == 3) {
+        printf("mkdir: cannot create directory '%s': File exists\n", pathname);
+        return 1; // 存在
+    } else {
+        return 0;
     }
-    if (rmkdir(pathname) == -1) {
-        printf("rrmdir(pathname)==-1\n");
-        exit(-1);
-    }
-    return 0;
 }
 
 int stouch(const char *pathname) {
