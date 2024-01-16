@@ -287,6 +287,7 @@ int rclose(int fd) {
 }
 
 ssize_t rwrite(int fd, const void *buf, size_t count) {
+    //偏移量指向的事下一个的位置
     if (fd >= NRFD || fdesc[fd].used == 0)
         return -1;
     if (fdesc[fd].f->type == DIR_NODE)
@@ -295,14 +296,14 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         return -1;
     int offset = fdesc[fd].offset;
 
-    //先扩容到偏移量的位置
-    if (offset >= fdesc[fd].f->size) {
-        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset + 1);
+    //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
+    if (offset > fdesc[fd].f->size) {
+        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset);
         char *char_content = (char *) fdesc[fd].f->content;
-        for (int i = fdesc[fd].f->size; i < offset + 1; ++i) {
+        for (int i = fdesc[fd].f->size; i < offset; ++i) {
             char_content[i] = 0;
         }
-        fdesc[fd].f->size = offset + 1;
+        fdesc[fd].f->size = offset;
     }
 
     //在扩容到可以存下count
