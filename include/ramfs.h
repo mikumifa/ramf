@@ -62,3 +62,5 @@ void init_ramfs();
 void close_ramfs();
 
 node *find(const char *pathname);
+
+char *strdup(const char *);

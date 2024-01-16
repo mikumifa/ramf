@@ -17,22 +17,9 @@ typedef struct PathNode {
 } PathNode;
 PathNode *pathHead = NULL;
 
-//tools
-char *strdup(const char *s) {
-    if (s == NULL) {
-        return NULL;
-    }
-    char *duplicate = malloc(strlen(s) + 1);
-    if (duplicate == NULL) {
-        return NULL;
-    }
-    strcpy(duplicate, s);
-    return duplicate;
-}
-
 void addPathNode(PathNode **head, char *path, int atStart) {
     PathNode *newNode = malloc(sizeof(PathNode));
-    newNode->path = strdup((const char *) path); // 复制路径字符串
+    newNode->path = strdup(path); // 复制路径字符串
     newNode->next = NULL;
 
     if (atStart || *head == NULL) {
