@@ -334,7 +334,6 @@ ssize_t rread(int fd, void *buf, size_t count) {
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(buf, char_content + offset, read_len);
     fdesc[fd].offset += count;
-    char *char_buf = (char *) buf;
     return read_len;
 }
 
