@@ -52,36 +52,36 @@ void clearPath(PathNode **head) {
 
 int sls(const char *pathname) {
     print("ls %s\n", pathname);
-    node *dir;
-    if (*pathname == '\0') {
-        dir = find("/");
-    } else {
-        dir = find(pathname);
-    }
-
-
-    if (find_state == 1) {
-        printf("ls: cannot access '%s': Not a directory\n", pathname);
-        return 1;
-    } else if (find_state == 2) {
-        printf("ls: cannot access '%s': No such file or directory\n", pathname);
-        return 1;
-    }
-
-    if (dir->type == FILE_NODE) {
-        printf("%s\n", pathname);
-        return 0;
-    } else {
-        int len = dir->dir_num;
-        for (int i = 0; i < len; ++i) {
-            if (i != len - 1) {
-                printf("%s  ", (char *) dir->dirs[i]->name);
-            } else {
-                printf("%s\n", (char *) dir->dirs[i]->name);
-            }
-        }
-        return 0;
-    }
+//    node *dir;
+//    if (pathname == NULL || *pathname == '\0') {
+//        dir = find("/");
+//    } else {
+//        dir = find(pathname);
+//    }
+//
+//
+//    if (find_state == 1) {
+//        printf("ls: cannot access '%s': Not a directory\n", pathname);
+//        return 1;
+//    } else if (find_state == 2) {
+//        printf("ls: cannot access '%s': No such file or directory\n", pathname);
+//        return 1;
+//    }
+//
+//    if (dir->type == FILE_NODE) {
+//        printf("%s\n", pathname);
+//        return 0;
+//    } else {
+//        int len = dir->dir_num;
+//        for (int i = 0; i < len; ++i) {
+//            if (i != len - 1) {
+//                printf("%s  ", (char *) dir->dirs[i]->name);
+//            } else {
+//                printf("%s\n", (char *) dir->dirs[i]->name);
+//            }
+//        }
+//        return 0;
+//    }
 
 }
 
