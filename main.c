@@ -6,14 +6,15 @@
 extern node *root;
 const char *content = "export PATH=$PATH:/usr/bin/\n";
 const char *ct = "export PATH=/home:$PATH";
+
 int main() {
     init_ramfs();
 
-    smkdir("/home");
-    smkdir("/home/ubuntu");
-    smkdir("/usr");
-    smkdir("/usr/bin");
-    stouch("/home/ubuntu/.bashrc");
+    assert(smkdir("/home") == 0);
+    assert(smkdir("/home/ubuntu") == 0);
+    assert(smkdir("/usr") == 0);
+    assert(smkdir("/usr/bin") == 0);
+    assert(smkdir("/home/ubuntu/.bashrc") == 0);
     rwrite(ropen("/home/ubuntu/.bashrc", O_WRONLY), content, strlen(content));
     rwrite(ropen("/home/ubuntu/.bashrc", O_WRONLY | O_APPEND), ct, strlen(ct));
     scat("/home/ubuntu/.bashrc");
@@ -28,5 +29,5 @@ int main() {
     secho("The Environment Variable PATH is:\\$PATH");
     close_ramfs();
     close_shell();
-    assert(root==NULL);
+    assert(root == NULL);
 }
