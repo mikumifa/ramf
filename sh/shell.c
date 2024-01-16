@@ -66,8 +66,6 @@ int sls(const char *pathname) {
         printf("ls: cannot access '%s': No such file or directory\n", pathname);
         return 1;
     }
-    dir->type = DIR_NODE;
-    return 0;
     if (dir->type == FILE_NODE) {
         printf("%s\n", pathname);
         return 0;

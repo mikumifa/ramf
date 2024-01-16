@@ -163,6 +163,10 @@ node *find(const char *pathname) {
             if (strcmp(now_dir->dirs[k]->name, parts[i]) == 0) {
                 // 找到匹配的子节点，递归继续查找
                 now_dir = now_dir->dirs[k];
+                if (now_dir->type == FILE_NODE) {
+                    find_state = 1;
+                    return NULL;
+                }
                 canFind = 1;
                 break;
             }
