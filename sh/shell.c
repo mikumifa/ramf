@@ -86,11 +86,20 @@ int sls(const char *pathname) {
 
 int scat(const char *pathname) {
     print("cat %s\n", pathname);
-    node *file = find(pathname);
-    if (file == NULL) {
+    int pos = findFirstLastPathPos(pathname);
+    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
+    strncpy(pre_path, pathname, pos);
+    pre_path[pos] = '\0';
+    int state = pathOk(pathname);
+    free(pre_path);
+    if (state == 1) {
+        printf("cat: %s: Is a directory\n", pathname);
+        return 1;
+    } else if (state == 2) {
         printf("cat: %s: No such file or directory\n", pathname);
         return 1;
     }
+    node *file = find(pathname);
     if (file->type == DIR_NODE) {
         printf("cat: %s: Is a directory\n", pathname);
         return 1;
@@ -287,5 +296,4 @@ void init_shell() {
 
 void close_shell() {
     clearPath(&pathHead);
-
 }
