@@ -8,7 +8,7 @@ int main() {
     init_ramfs();
     init_shell();
 
-    assert(sls("/home") == 1);
+    assert(sls("//////////////////home///") == 1);
     assert(sls(NULL) == 0);
 
     assert(smkdir("/1") == 0);
