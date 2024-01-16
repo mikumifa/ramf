@@ -186,6 +186,8 @@ void print_env(char *env_str) {
 }
 
 int secho(const char *content) {
+    print("echo %s\n", content);
+
     const char *p = content;
     while (*p) {
         if (*p == '\\') {
