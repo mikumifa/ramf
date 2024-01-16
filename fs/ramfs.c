@@ -329,15 +329,13 @@ ssize_t rread(int fd, void *buf, size_t count) {
         return -1;
     }
     int offset = fdesc[fd].offset;
-    if (!context_extend(&(fdesc[fd].f->content), offset + count))
-        return -1; // 扩展失败
+    int left = fdesc[fd].f->size - offset;
+    int read_len = left > count ? count : left;
 
     char *char_content = (char *) fdesc[fd].f->content;
-    memcpy(buf, char_content + offset, count);
-    int buf_len = strlen(buf);
-    int ret_len = buf_len > count ? count : strlen(buf); // 返回实际读取的字节数
-    fdesc[fd].offset += ret_len;
-    return ret_len;
+    memcpy(buf, char_content + offset, read_len);
+    fdesc[fd].offset += read_len;
+    return read_len;
 }
 
 
