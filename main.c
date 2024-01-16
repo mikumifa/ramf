@@ -33,7 +33,7 @@ int main() {
 
 // 关闭并重新打开文件以进行读取
     assert(rclose(fd_append) == 0);
-    fd_append = ropen("/append", O_WRONLY | O_APPEND);
+    fd_append = ropen("/append", O_RDONLY | O_APPEND);
     assert(fd_append >= 0);
 
 // 读取并验证内容
