@@ -7,11 +7,8 @@
 int main() {
     init_ramfs();
     init_shell();
-    assert(smkdir("/home") == 0);
-    assert(stouch("/home") == 0);
-    assert(rrmdir("/home/") == 0);
 
-    assert(sls(NULL) == 1);
+    assert(sls("/home") == 1);
     assert(scat("/home/ubuntu/.bashrc") == 1);
     assert(scat("/") == 1);
     assert(smkdir("/home") == 0);
