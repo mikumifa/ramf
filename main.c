@@ -10,7 +10,6 @@ int notin(int fd, int *fds, int n) {
     }
     return 1;
 }
-
 int genfd(int *fds, int n) {
     for (int i = 0; i < 4096; i++) {
         if (notin(i, fds, n))
@@ -18,32 +17,56 @@ int genfd(int *fds, int n) {
     }
     return -1;
 }
-
 int main() {
     init_ramfs();
-    // 在main函数中添加以下代码进行测试
-    int fd_append;
-    fd_append = ropen("/append", O_CREAT);
-    fd_append = ropen("/append", O_WRONLY | O_APPEND);
-    assert(fd_append >= 0);
-
-// 进行写入测试
-    assert(rwrite(fd_append, "hello", 5) == 5);
-    assert(rwrite(fd_append, "world", 5) == 5);
-
-// 关闭并重新打开文件以进行读取
-    assert(rclose(fd_append) == 0);
-    fd_append = ropen("/append", O_RDONLY | O_APPEND);
-    assert(fd_append >= 0);
-
-// 读取并验证内容
-    char read_buf[11];
-    memset(read_buf, 0, sizeof(read_buf));
-    assert(rread(fd_append, read_buf, 10) == 10);
-    assert(memcmp(read_buf, "helloworld", 10) == 0);
-
-// 关闭文件
-    assert(rclose(fd_append) == 0);
-
+    int fd[10];
+    int buf[10];
+    assert(ropen("/abc==d", O_CREAT) == -1);
+    assert((fd[0] = ropen("/0", O_RDONLY)) == -1);
+    assert((fd[0] = ropen("/0", O_CREAT | O_WRONLY)) >= 0);
+    assert((fd[1] = ropen("/1", O_CREAT | O_WRONLY)) >= 0);
+    assert((fd[2] = ropen("/2", O_CREAT | O_WRONLY)) >= 0);
+    assert((fd[3] = ropen("/3", O_CREAT | O_WRONLY)) >= 0);
+    assert(rread(fd[0], buf, 1) == -1);
+    assert(rread(fd[1], buf, 1) == -1);
+    assert(rread(fd[2], buf, 1) == -1);
+    assert(rread(fd[3], buf, 1) == -1);
+    for (int i = 0; i < 100; i++) {
+        assert(rwrite(fd[0], "\0\0\0\0\0", 5) == 5);
+        assert(rwrite(fd[1], "hello", 5) == 5);
+        assert(rwrite(fd[2], "world", 5) == 5);
+        assert(rwrite(fd[3], "\x001\x002\x003\x0fe\x0ff", 5) == 5);
+    }
+    assert(rclose(fd[0]) == 0);
+    assert(rclose(fd[1]) == 0);
+    assert(rclose(fd[2]) == 0);
+    assert(rclose(fd[3]) == 0);
+    assert(rclose(genfd(fd, 4)) == -1);
+    assert((fd[0] = ropen("/0", O_CREAT | O_RDONLY)) >= 0);
+    assert((fd[1] = ropen("/1", O_CREAT | O_RDONLY)) >= 0);
+    assert((fd[2] = ropen("/2", O_CREAT | O_RDONLY)) >= 0);
+    assert((fd[3] = ropen("/3", O_CREAT | O_RDONLY)) >= 0);
+    assert(rwrite(fd[0], buf, 1) == -1);
+    assert(rwrite(fd[1], buf, 1) == -1);
+    assert(rwrite(fd[2], buf, 1) == -1);
+    assert(rwrite(fd[3], buf, 1) == -1);
+    for (int i = 0; i < 50; i++) {
+        assert(rread(fd[0], buf, 10) == 10);
+        assert(memcmp(buf, "\0\0\0\0\0\0\0\0\0\0", 10) == 0);
+        assert(rread(fd[1], buf, 10) == 10);
+        assert(memcmp(buf, "hellohello", 10) == 0);
+        assert(rread(fd[2], buf, 10) == 10);
+        assert(memcmp(buf, "worldworld", 10) == 0);
+        assert(rread(fd[3], buf, 10) == 10);
+        assert(memcmp(buf, "\x001\x002\x003\x0fe\x0ff\x001\x002\x003\x0fe\x0ff", 10) == 0);
+    }
+    assert(rread(fd[0], buf, 10) == 0);
+    assert(rread(fd[1], buf, 10) == 0);
+    assert(rread(fd[2], buf, 10) == 0);
+    assert(rread(fd[3], buf, 10) == 0);
+    assert(rclose(fd[0]) == 0);
+    assert(rclose(fd[1]) == 0);
+    assert(rclose(fd[2]) == 0);
+    assert(rclose(fd[3]) == 0);
     return 0;
 }
