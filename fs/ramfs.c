@@ -198,7 +198,7 @@ node *find(const char *pathname) {
 }
 
 int ropen(const char *pathname, int flags) {
-    if (!is_vaild_str(pathname))
+    if (!is_vaild_str((char*)pathname))
         return -1;
 
     if (flags & O_APPEND) {
