@@ -115,7 +115,7 @@ int scat(const char *pathname) {
 int smkdir(const char *pathname) {
     print("mkdir %s\n", pathname);
 
-    //rmkdir(pathname);
+    rmkdir(pathname);
     if (make_dir_state == 1) {
         printf("mkdir: cannot create directory '%s': Not a directory\n", pathname);
         return 1;
