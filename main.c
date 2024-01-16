@@ -9,6 +9,7 @@ int main() {
     init_shell();
 
     assert(sls("/home") == 1);
+    assert(sls(NULL) == 0);
 
     assert(smkdir("/1") == 0);
     assert(stouch("/2.txt") == 0);
