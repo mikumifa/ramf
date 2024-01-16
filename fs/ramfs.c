@@ -321,7 +321,7 @@ int rclose(int fd) {
     return 0;
 }
 
-ssize_t write(int fd, const void *buf, size_t count) {
+ssize_t rwrite(int fd, const void *buf, size_t count) {
     if (fd < 0 || fd >= NRFD || !fdesc[fd].used || !(fdesc[fd].flags & O_WRONLY)) {
         return -1; // 检查文件描述符有效性和写权限
     }
@@ -345,10 +345,8 @@ ssize_t write(int fd, const void *buf, size_t count) {
     }
     // 将数据从buf复制到文件内容的相应位置
     memcpy(((char *)file_desc->f->content) + file_desc->offset, buf, count);
-
     // 更新文件描述符的偏移量
     file_desc->offset += count;
-
     return count; // 返回写入的字节数
 }
 
