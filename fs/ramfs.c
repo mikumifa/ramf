@@ -14,18 +14,6 @@ int find_state;
 int make_dir_state;
 int pre_path_state;
 
-int context_extend(void **content, int size) {
-    if (content == NULL || *content == NULL) {
-        *content = malloc(size);
-    } else {
-        *content = realloc(*content, size);
-    }
-    if (*content == NULL) {
-        return 0; // 失败
-    }
-    return 1; // 成功
-}
-
 
 int is_valid_char(char c) {
     return isalnum(c) || c == '.' || c == '/'; // 只允许字母、数字和点号
@@ -306,13 +294,23 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
     if (!(fdesc[fd].flags & O_WRONLY || fdesc[fd].flags & O_RDWR))
         return -1;
     int offset = fdesc[fd].offset;
-    if (!context_extend(&(fdesc[fd].f->content), offset + count))
-        return -1; // 扩展失败
 
+    //先扩容到偏移量的位置
+    if (offset >= fdesc[fd].f->size) {
+        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset + 1);
+        char *char_content = (char *) fdesc[fd].f->content;
+        for (int i = fdesc[fd].f->size; i < offset + 1; ++i) {
+            char_content[i] = 0;
+        }
+        fdesc[fd].f->size = offset + 1;
+    }
+
+    //在扩容到可以存下count
+    fdesc[fd].f->content = realloc(fdesc[fd].f->content, fdesc[fd].f->size + count);
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(char_content + offset, buf, count);
     fdesc[fd].offset += count;
-    fdesc[fd].f->size = offset + count;
+    fdesc[fd].f->size += count;
     return count; // 返回写入的字节数
 }
 
@@ -357,8 +355,8 @@ off_t rseek(int fd, off_t offset, int whence) {
             return -1;
     }
 
-    if (new_offset < 0 || new_offset > fdesc[fd].f->size)
-        return -1; // 超出文件范围
+    if (new_offset < 0)
+        return -1;
 
     fdesc[fd].offset = new_offset;
     return new_offset;
