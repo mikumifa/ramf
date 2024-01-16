@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ramfs.h"
-#include "ramfs.h"
 
 int main() {
     init_ramfs(); // 初始化你的文件系统
@@ -35,7 +34,7 @@ int main() {
     assert((fd[0] = ropen("/dir/file0", O_RDONLY)) >= 0);
     assert((fd[1] = ropen("/dir/subdir/file1", O_RDONLY)) >= 0);
 
-   
+
 
     // 关闭文件
     assert(rclose(fd[0]) == 0);
