@@ -21,7 +21,7 @@ typedef struct PathNode {
     struct PathNode *next;
 } PathNode;
 PathNode *pathHead = NULL;
-extern char **parts;
+extern char** parts;
 extern int find_state;
 extern int make_dir_state;
 extern int pre_path_state;
