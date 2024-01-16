@@ -328,9 +328,10 @@ ssize_t rread(int fd, void *buf, size_t count) {
 
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(buf, char_content + offset, count);
-    fdesc[fd].offset += count;
     int buf_len = strlen(buf);
-    return buf_len > count ? count : strlen(buf); // 返回实际读取的字节数
+    int ret_len=buf_len > count ? count : strlen(buf); // 返回实际读取的字节数
+    fdesc[fd].offset += ret_len;
+    return  ret_len;
 }
 
 
