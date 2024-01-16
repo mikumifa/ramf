@@ -286,7 +286,7 @@ read(fd2, buf, 6); //从fd2中读取6个字节存储到buf中
 ```bash
 export PATH=/path/to
 ```
-表示将PATH设置为`/path/to`，数据保证此设置至少在文件的开头出现一次。
+表示将PATH设置为`/path/to`，数据保证此设置至少在文+件的开头出现一次。
 
 ****
 

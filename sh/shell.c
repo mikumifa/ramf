@@ -1,8 +1,13 @@
 #include "ramfs.h"
 #include "shell.h"
 
+#include "ramfs.h"
+#include "shell.h"
+
 #ifndef ONLINE_JUDGE
 #define print(...) printf("\033[31m");printf(__VA_ARGS__);printf("\033[0m");
+#else
+#define print(...)
 #endif
 
 #include <stdio.h>
@@ -16,6 +21,7 @@ typedef struct PathNode {
     struct PathNode *next;
 } PathNode;
 PathNode *pathHead = NULL;
+extern char **parts;
 
 void addPathNode(PathNode **head, char *path, int atStart) {
     PathNode *newNode = malloc(sizeof(PathNode));
@@ -50,32 +56,196 @@ void clearPath(PathNode **head) {
 
 int sls(const char *pathname) {
     print("ls %s\n", pathname);
+    node *dir;
+    if (*pathname == '\0') {
+        dir = find("/");
+
+    } else {
+        dir = find(pathname);
+    }
+    if (pathname == NULL) {
+        printf("ls: cannot access '%s': No such file or directory\n", pathname);
+        return 1;
+    }
+    if (dir->type == FILE_NODE) {
+        printf("%s\n", dir->name);
+        return 0;
+    } else {
+        int len = dir->dir_num;
+        for (int i = 0; i < len; ++i) {
+            if (i != len - 1) {
+                printf("%s  ", (char *) dir->dirs[i]);
+            } else {
+                printf("%s\n", (char *) dir->dirs[i]);
+            }
+        }
+        return 0;
+    }
 
 }
 
 int scat(const char *pathname) {
     print("cat %s\n", pathname);
-
+    node *file = find(pathname);
+    if (file == NULL) {
+        printf("cat: cannot access '%s': No such file or directory\n", pathname);
+        return 1;
+    }
+    if (file->type == DIR_NODE) {
+        printf("cat: %s: Is a directory", pathname);
+        return 0;
+    } else {
+        char *char_content = (char *) file->content;
+        for (int i = 0; i < file->size; ++i) {
+            putchar(char_content[i]);
+        }
+        puts("/n");
+        return 0;
+    }
 }
 
 int smkdir(const char *pathname) {
     print("mkdir %s\n", pathname);
+    node *existing = find(pathname);
+    if (existing != NULL) {
+        printf("mkdir: cannot create directory '%s': File exists\n", pathname);
+        return 1; // 存在
+    }
+    //如何能找到前面的文件夹
 
+
+    node *pre_path_node = getPrePath(pathname);
+    if (pre_path_node == NULL || pre_path_node->type == FILE_NODE) {
+        printf("mkdir: cannot create directory '%s': No such file or directory\n", pathname);
+        return 1;
+    }
+    //找到最后一个然后添加最后一个
+    int len = split_pathname(pathname);
+    char *dir_name = parts[len - 1];
+    //添加一个
+    node **temp = (node **) malloc(sizeof(node *) * pre_path_node->dir_num + 1);
+    int top = 0;
+    for (int i = 0; i < pre_path_node->dir_num; ++i) {
+        temp[top++] = pre_path_node->dirs[i];
+    }
+    temp[top] = (node *) malloc(sizeof(node));
+    temp[top]->type = DIR_NODE;
+    temp[top]->dir_num = 0;
+    temp[top]->name = strdup(dir_name);
+    temp[top]->content = NULL;
+    temp[top]->size = 0;
+    temp[top]->dirs = NULL;
+    free(pre_path_node->dirs);
+    pre_path_node->dirs = temp;
+    pre_path_node->dir_num++;
+    return 0;
 }
 
 int stouch(const char *pathname) {
     print("touch %s\n", pathname);
+    int fd = ropen(pathname, O_CREAT);
+    if (fd == -1) {
+        printf("touch: cannot touch '%s': No such file or directory", pathname);
+        return 1;
+    }
+    rclose(fd);
+    return 0;
+}
 
+char *strndup(const char *s, size_t n) {
+    int s_len = strlen(s);
+    size_t len = s_len > n ? n : s_len;  // 计算字符串长度，但不超过n
+    char *newStr = malloc(len + 1);  // 为新字符串分配内存，包括空字符
+
+    if (newStr == NULL) {
+        return NULL;  // 内存分配失败
+    }
+
+    memcpy(newStr, s, len);  // 复制字符串
+    newStr[len] = '\0';      // 确保新字符串以空字符结束
+
+    return newStr;
+}
+
+void print_env(char *env_str) {
+    if (strcmp(env_str, "PATH") == 0) {
+        PathNode *current = pathHead;
+        PathNode *next;
+
+        while (current != NULL) {
+            puts(current->path);
+            if (current->next != NULL) {
+                printf(":");
+            }
+            current = current->next;
+        }
+        printf("\n");
+    } else {
+
+    }
 }
 
 int secho(const char *content) {
-    print("echo %s\n", content);
+    const char *p = content;
+    while (*p) {
+        if (*p == '\\') {
+            p++; // 跳过反斜杠
+            switch (*p) {
+                case 'n':
+                    printf("\n");
+                    break;
+                case 't':
+                    printf("\t");
+                    break;
+                case 'r':
+                    printf("\r");
+                    break;
+                case '\\':
+                    printf("\\");
+                    break;
+                case '$':
+                    printf("$");
+                    break;
 
+                default:
+                    printf("%c", *p);
+            }
+        } else if (*p == '$') {
+            const char *start = ++p;
+            while ((*p >= 'A' && *p <= 'Z') || (*p >= 'a' && *p <= 'z') || (*p >= '0' && *p <= '9')) {
+                p++;
+            }
+            char *varName = strndup(start, p - start);
+            print_env(varName);
+            free(varName);
+            p--;
+        } else {
+            printf("%c", *p);
+        }
+        p++;
+    }
+    printf("\n");
+    return 0;
 }
 
 int swhich(const char *cmd) {
     print("which %s\n", cmd);
+    PathNode *current = pathHead;
+    while (current != NULL) {
+        node *dir = find(current->path);
+        if (dir == NULL) {
 
+        } else {
+            for (int i = 0; i < dir->dir_num; ++i) {
+                if (dir->dirs[i]->type == FILE_NODE && strcmp(dir->dirs[i]->name, cmd) == 0) {
+                    printf("%s\n", current->path);
+                    return 0;
+                }
+            }
+        }
+        current = current->next;
+    }
+    return 1;
 }
 
 void processLine(char *line) {
@@ -127,6 +297,7 @@ void init_shell() {
         line[lineIndex] = '\0';
         processLine(line);
     }
+    rclose(fd);
 }
 
 void close_shell() {

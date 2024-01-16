@@ -64,3 +64,13 @@ void close_ramfs();
 node *find(const char *pathname);
 
 char *strdup(const char *);
+
+void free_node(node *pre, node *n);
+
+node *getPrePath(const char *pathname);
+
+int split_pathname(const char *pathname);
+
+int is_valid_char(char c);
+
+int is_vaild_str(const char *str);

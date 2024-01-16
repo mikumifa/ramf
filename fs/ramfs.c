@@ -13,7 +13,6 @@ FD fdesc[NRFD];
 #define FILENAME_MAX 100
 char parts[MAX_PATH_PARTS][FILENAME_MAX];
 
-void free_node(node *pre, node *n);
 
 int context_extend(void **content, int size) {
     if (content == NULL || *content == NULL) {
