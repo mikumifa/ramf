@@ -233,9 +233,11 @@ int ropen(const char *pathname, int flags) {
             pre_path_node->dirs = temp;
             pre_path_node->dir_num++;
             file = temp[top];
+        } else {
+            if (file->type == DIR_NODE)
+                return -1;
         }
         int fd_top = find_unuse_fd();
-
         fdesc[fd_top].flags = flags;
         fdesc[fd_top].f = file;
         fdesc[fd_top].offset = 0;
