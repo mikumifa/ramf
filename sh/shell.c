@@ -75,9 +75,9 @@ int sls(const char *pathname) {
         int len = dir->dir_num;
         for (int i = 0; i < len; ++i) {
             if (i != len - 1) {
-                printf("%s  ", (char *) dir->dirs[i]);
+                printf("%s  ", (char *) dir->dirs[i]->name);
             } else {
-                printf("%s\n", (char *) dir->dirs[i]);
+                printf("%s\n", (char *) dir->dirs[i]->name);
             }
         }
         return 0;
