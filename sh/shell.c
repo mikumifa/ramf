@@ -172,7 +172,6 @@ void print_env(char *env_str) {
             }
             current = current->next;
         }
-        printf("\n");
     } else {
 
     }
