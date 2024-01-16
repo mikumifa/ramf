@@ -17,10 +17,6 @@ typedef struct PathNode {
     struct PathNode *next;
 } PathNode;
 PathNode *pathHead = NULL;
- char parts[MAX_PATH_PARTS][FILENAME_MAX];
- int find_state;
- int make_dir_state;
- int pre_path_state;
 
 void addPathNode(PathNode **head, char *path, int atStart) {
     PathNode *newNode = malloc(sizeof(PathNode));
