@@ -497,14 +497,14 @@ void init_ramfs() {
 }
 
 //递归的函数
-void free_node(node *pre, node *n) {
+void free_node(node *n) {
     if (n == NULL) {
         return;
     }
     // 目录节点，释放子节点
     if (n->type == DIR_NODE) {
         for (int i = 0; i < n->dir_num; ++i) {
-            free_node(n, n->dirs[i]);
+            free_node(n->dirs[i]);
         }
         // 释放子节点数组
         free(n->dirs);
@@ -516,25 +516,10 @@ void free_node(node *pre, node *n) {
     free(n->name);
     //本身
     free(n);
-
-    if (pre == NULL) {
-        return;
-    }
-    //删除一个
-    node **temp = (node **) malloc(sizeof(node *) * pre->dir_num - 1);
-    int top = 0;
-    for (int i = 0; i < pre->dir_num; ++i) {
-        if (pre->dirs[i] != n) {
-            temp[top++] = pre->dirs[i];
-        }
-    }
-    free(pre->dirs);
-    pre->dirs = temp;
-    root->dir_num--;
 }
 
 void close_ramfs() {
-    free_node(NULL, root);
+    free_node(root);
     root = NULL;
 }
 

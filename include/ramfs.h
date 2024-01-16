@@ -19,7 +19,6 @@
 #define SEEK_END 2
 
 
-
 typedef intptr_t ssize_t; //有符号指针
 typedef uintptr_t size_t; //无符号指针
 typedef long off_t; //偏移量的类型，
@@ -55,7 +54,6 @@ extern int make_dir_state;
 extern int pre_path_state;
 
 
-
 int ropen(const char *pathname, int flags);
 
 int rclose(int fd);
@@ -80,7 +78,7 @@ node *find(const char *pathname);
 
 char *strdup(const char *);
 
-void free_node(node *pre, node *n);
+void free_node(node *n);
 
 node *getPrePath(const char *pathname);
 
