@@ -88,7 +88,7 @@ int scat(const char *pathname) {
     print("cat %s\n", pathname);
     node *file = find(pathname);
     if (file == NULL) {
-        printf("cat: cannot access '%s': No such file or directory\n", pathname);
+        printf("cat: %s: No such file or directory\n", pathname);
         return 1;
     }
     if (file->type == DIR_NODE) {
