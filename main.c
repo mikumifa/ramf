@@ -23,11 +23,11 @@ int main() {
     init_ramfs();
     int fd[10];
     int buf[10];
-    rmkdir("/test/");
-    rmkdir("/test/hello");
-    rmkdir("/test///hello///main");
 
-    assert((fd[0] = ropen("/test//hello///main/0", O_RDONLY)) == -1);
+    assert(rmkdir("/test/") == 0);;
+    assert(rmkdir("/test/hello") == 0);
+
+    assert(rmkdir("/test///hello///main") == 0);
     assert((fd[0] = ropen("/test//hello///main/0", O_CREAT | O_WRONLY)) >= 0);
 
     assert((fd[1] = ropen("/test//hello///main/1", O_CREAT | O_WRONLY)) >= 0);
