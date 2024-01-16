@@ -313,7 +313,7 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         fdesc[fd].f->size = offset + count;
     }
     char *char_content = (char *) fdesc[fd].f->content;
-//    memcpy(char_content + offset, buf, count);
+    memcpy(char_content + offset, buf, count);
     fdesc[fd].offset += count;
     return count; // 返回写入的字节数
 }
@@ -333,7 +333,7 @@ ssize_t rread(int fd, void *buf, size_t count) {
     char *char_content = (char *) fdesc[fd].f->content;
     if (read_len <= 0)
         return 0;
-    memcpy(buf, char_content + offset, read_len);
+   // memcpy(buf, char_content + offset, read_len);
     fdesc[fd].offset += read_len;
     return read_len;
 }
