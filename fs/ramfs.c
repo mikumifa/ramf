@@ -16,33 +16,21 @@ int pre_path_state;
 
 node *create_node(int nodeType, const char *name) {
     node *newNode = (node *) malloc(sizeof(node));
-    if (newNode == NULL) {
-        return NULL; // 内存分配失败
-    }
     newNode->type = nodeType;
     newNode->dirs = NULL;
     newNode->dir_num = 0;
-    newNode->content = NULL;
+    newNode->content = strdup("");
     newNode->size = 0;
     newNode->name = strdup(name); // 复制名称
-    if (newNode->name == NULL) {
-        free(newNode);
-        return NULL; // 名称分配失败
-    }
     return newNode;
 }
 
 int add_subdir(node *dir, node *subdir) {
-    if (dir == NULL || subdir == NULL || dir->type != DIR_NODE) {
-        return -1; // 无效的参数
-    }
-
     // 重新分配内存以容纳新的子目录
     node **newDirs = realloc(dir->dirs, (dir->dir_num + 1) * sizeof(node *));
     dir->dirs = newDirs;
     dir->dirs[dir->dir_num] = subdir;
     dir->dir_num++;
-
     return 0; // 成功
 }
 
