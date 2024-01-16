@@ -306,7 +306,8 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         return -1;
     if (fdesc[fd].f->type == DIR_NODE)
         return -1;
-
+    if (!(fdesc[fd].flags & O_WRONLY || fdesc[fd].flags & O_RDWR))
+        return -1;
     int offset = fdesc[fd].offset;
     if (!context_extend(&(fdesc[fd].f->content), offset + count))
         return -1; // 扩展失败
@@ -324,6 +325,9 @@ ssize_t rread(int fd, void *buf, size_t count) {
         return -1;
     if (fdesc[fd].f->type == DIR_NODE)
         return -1;
+    if (fdesc[fd].flags & O_WRONLY) {
+        return -1;
+    }
     int offset = fdesc[fd].offset;
     if (!context_extend(&(fdesc[fd].f->content), offset + count))
         return -1; // 扩展失败
