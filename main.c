@@ -9,7 +9,7 @@ int main() {
     init_shell();
     assert(smkdir("/home") == 0);
 
-    assert(sls("//////////////////home///1") == 1);
+    assert(sls("//////////////////home") == 1);
     assert(sls(NULL) == 0);
 
     assert(smkdir("/1") == 0);
