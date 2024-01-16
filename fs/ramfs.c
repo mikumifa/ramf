@@ -7,7 +7,7 @@
 
 node *root = NULL;
 
-#define NRFD 4096
+#define NRFD 4100
 FD fdesc[NRFD];
 #define MAX_PATH_PARTS 100
 #define FILENAME_MAX 100
