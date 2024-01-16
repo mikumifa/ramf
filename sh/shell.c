@@ -106,7 +106,6 @@ void init_shell() {
     int bytesRead;
     int lineIndex = 0;
 
-    PathNode *pathHead = NULL;
 
     while ((bytesRead = rread(fd, buf, sizeof(buf) - 1)) > 0) {
         buf[bytesRead] = '\0'; // 确保字符串正确结束
