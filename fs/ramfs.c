@@ -162,7 +162,10 @@ node *find(const char *pathname) {
         find_state = 2;
         return NULL;
     }
-
+    if (len == 0) {
+        find_state = 0;
+        return root;
+    }
     node *now_dir = root;
     for (int i = 0; i < len; ++i) {
         if (now_dir->type == FILE_NODE) {
