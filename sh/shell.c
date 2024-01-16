@@ -120,10 +120,10 @@ int smkdir(const char *pathname) {
     int state = pathOk(pre_path);
     free(pre_path);
 
-    if (state==1) {
+    if (state == 1) {
         printf("mkdir: cannot create directory '%s': Not a directory\n", pathname);
         return 1;
-    }else if(state==2){
+    } else if (state == 2) {
         printf("mkdir: cannot create directory '%s': No such file or directory\n", pathname);
         return 1;
     }
@@ -230,6 +230,7 @@ int swhich(const char *cmd) {
         }
         current = current->next;
     }
+    printf("/n");
     return 1;
 }
 
