@@ -53,11 +53,11 @@ void clearPath(PathNode **head) {
 int sls(const char *pathname) {
     print("ls %s\n", pathname);
     node *dir;
-    if (pathname == NULL || *pathname == '\0') {
-        dir = find("/");
-    } else {
-        dir = find(pathname);
-    }
+//    if (pathname == NULL || *pathname == '\0') {
+//        dir = find("/");
+//    } else {
+//        dir = find(pathname);
+//    }
 
 
 //    if (find_state == 1) {
