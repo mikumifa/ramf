@@ -328,14 +328,13 @@ ssize_t rread(int fd, void *buf, size_t count) {
         return -1;
     }
     off_t offset = fdesc[fd].offset;
-    int left = fdesc[fd].f->size - offset;
-    int read_len = left > count ? count : left;
+    int left_len = fdesc[fd].f->size - offset;
+    int read_len = left_len > count ? count : left_len;
 
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(buf, char_content + offset, read_len);
-    fdesc[fd].offset += read_len;
+    fdesc[fd].offset += count;
     char *char_buf = (char *) buf;
-    char_buf[read_len] = '\0';
     return read_len;
 }
 
