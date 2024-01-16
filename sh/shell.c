@@ -82,7 +82,7 @@ int sls(const char *pathname) {
 //        }
 //        return 0;
 //    }
-
+    return 0;
 }
 
 int scat(const char *pathname) {
