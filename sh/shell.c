@@ -187,21 +187,11 @@ void print_env(char *env_str) {
 
 int secho(const char *content) {
     print("echo %s\n", content);
-
     const char *p = content;
     while (*p) {
         if (*p == '\\') {
             p++; // 跳过反斜杠
             switch (*p) {
-                case 'n':
-                    printf("\n");
-                    break;
-                case 't':
-                    printf("\t");
-                    break;
-                case 'r':
-                    printf("\r");
-                    break;
                 case '\\':
                     printf("\\");
                     break;
