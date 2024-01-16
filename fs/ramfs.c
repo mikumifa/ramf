@@ -75,6 +75,35 @@ node *getPrePath(const char *pathname) {
     return pre_path_node;
 }
 
+//没问题 0
+//如果先前的path里面有file充当path是1
+//如果先前的path里面有不存在的事2
+int pathOk(const char *pathname) {
+    int len = split_pathname(pathname);
+    if (len == -1)
+        return 2;
+    node *now_dir = root;
+    for (int i = 0; i < len; ++i) {
+        if (now_dir->type == FILE_NODE)
+            return 1;
+        int canFind = 0;
+        for (int k = 0; k < now_dir->dir_num; ++k) {
+            if (strcmp(now_dir->dirs[k]->name, parts[i]) == 0) {
+                // 找到匹配的子节点，递归继续查找
+                now_dir = now_dir->dirs[k];
+                canFind = 1;
+                break;
+            }
+        }
+        if (canFind == 0)
+            return 2;
+
+    }
+    if (now_dir->type == FILE_NODE)
+        return 1;
+    return 0;
+}
+
 //切割出来，有问题返回-1，
 //不然返回的是切割的结果
 //文件的末尾不能有’/‘

@@ -69,8 +69,12 @@ void free_node(node *pre, node *n);
 
 node *getPrePath(const char *pathname);
 
+int pathOk(const char *);
+
 int split_pathname(const char *pathname);
 
 int is_valid_char(char c);
 
 int is_vaild_str(const char *str);
+
+int findFirstLastPathPos(const char *);

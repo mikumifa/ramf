@@ -113,10 +113,18 @@ int smkdir(const char *pathname) {
     }
     //如何能找到前面的文件夹
 
+    int pos = findFirstLastPathPos(pathname);
+    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
+    strncpy(pre_path, pathname, pos);
+    pre_path[pos] = '\0';
+    int state = pathOk(pre_path);
+    free(pre_path);
 
-    node *pre_path_node = getPrePath(pathname);
-    if (pre_path_node == NULL || pre_path_node->type == FILE_NODE) {
+    if (state==1) {
         printf("mkdir: cannot create directory '%s': Not a directory\n", pathname);
+        return 1;
+    }else if(state==2){
+        printf("mkdir: cannot create directory '%s': No such file or directory\n", pathname);
         return 1;
     }
     if (rmkdir(pathname) == -1) {
