@@ -315,8 +315,8 @@ int ropen(const char *pathname, int flags) {
 
 int rclose(int fd) {
     if (fd >= NRFD || fdesc[fd].used == 0)
-
         return -1;
+
     fdesc[fd].used = 0;
     return 0;
 }
@@ -358,7 +358,7 @@ ssize_t rread(int fd, void *buf, size_t count) {
         return -1;
     if (fdesc[fd].f->type == DIR_NODE)
         return -1;
-    if (fdesc[fd].flags & O_WRONLY) {
+    if (!(fdesc[fd].flags & O_RDWR || fdesc[fd].flags & O_RDONLY)) {
         return -1;
     }
     off_t offset = fdesc[fd].offset;
