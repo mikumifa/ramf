@@ -330,9 +330,10 @@ ssize_t rread(int fd, void *buf, size_t count) {
     int read_len = left > count ? count : left;
 
     char *char_content = (char *) fdesc[fd].f->content;
-    memset(buf, 0, sizeof(buf));
     memcpy(buf, char_content + offset, read_len);
     fdesc[fd].offset += read_len;
+    char *char_buf = (char *) buf;
+    char_buf[read_len] = '\0';
     return read_len;
 }
 
