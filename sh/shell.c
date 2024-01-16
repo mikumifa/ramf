@@ -119,7 +119,7 @@ int smkdir(const char *pathname) {
         printf("mkdir: cannot create directory '%s': No such file or directory\n", pathname);
         return 1;
     }
-    if (rrmdir(pathname) == -1) {
+    if (rmkdir(pathname) == -1) {
         printf("rrmdir(pathname)==-1\n");
         exit(-1);
     }
