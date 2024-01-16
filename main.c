@@ -24,11 +24,14 @@ int main() {
     int fd[10];
     int buf[10];
     rmkdir("/test/");
-    assert((fd[0] = ropen("/test/0", O_RDONLY)) == -1);
-    assert((fd[0] = ropen("/test/0", O_CREAT | O_WRONLY)) >= 0);
-    assert((fd[1] = ropen("/test/1", O_CREAT | O_WRONLY)) >= 0);
-    assert((fd[2] = ropen("/test/2", O_CREAT | O_WRONLY)) >= 0);
-    assert((fd[3] = ropen("/test/3", O_CREAT | O_WRONLY)) >= 0);
+    rmkdir("/test/hello");
+    rmkdir("/test///hello///main");
+
+    assert((fd[0] = ropen("/test//hello///main/0", O_RDONLY)) == -1);
+    assert((fd[0] = ropen("/test//hello///main/0", O_CREAT | O_WRONLY)) >= 0);
+    assert((fd[1] = ropen("/test//hello///main/1", O_CREAT | O_WRONLY)) >= 0);
+    assert((fd[2] = ropen("/test//hello///main/2", O_CREAT | O_WRONLY)) >= 0);
+    assert((fd[3] = ropen("/test//hello///main/3", O_CREAT | O_WRONLY)) >= 0);
     assert(rread(fd[0], buf, 1) == -1);
     assert(rread(fd[1], buf, 1) == -1);
     assert(rread(fd[2], buf, 1) == -1);
