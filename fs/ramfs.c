@@ -269,7 +269,6 @@ int ropen(const char *pathname, int flags) {
             file->size = 0;
         }
         int fd_top = find_unuse_fd();
-
         fdesc[fd_top].flags = flags;
         fdesc[fd_top].f = file;
         fdesc[fd_top].offset = 0;
