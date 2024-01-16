@@ -130,7 +130,7 @@ int smkdir(const char *pathname) {
     } else if (make_dir_state == 3) {
         printf("mkdir: cannot create directory '%s': File exists\n", pathname);
         return 1; // 存在
-    } else {
+    } else{
         return 0;
     }
 }
@@ -243,7 +243,6 @@ int swhich(const char *cmd) {
         }
         current = current->next;
     }
-    printf("\n");
     return 1;
 }
 
