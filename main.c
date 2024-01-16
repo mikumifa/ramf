@@ -29,7 +29,7 @@ int main() {
 
     assert(rmkdir("/test///hello///main") == 0);
     assert((fd[0] = ropen("/test//hello///main/0", O_CREAT | O_WRONLY)) >= 0);
-    rmkdir("/test///hello///main/0/");
+    rmkdir("/test///hello///main/0");
 
     assert((fd[1] = ropen("/test//hello///main/1", O_CREAT | O_WRONLY)) >= 0);
     assert((fd[2] = ropen("/test//hello///main/2", O_CREAT | O_WRONLY)) >= 0);
