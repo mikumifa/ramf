@@ -73,7 +73,7 @@ int sls(const char *pathname) {
         int len = dir->dir_num;
         for (int i = 0; i < len; ++i) {
             if (i != len - 1) {
-                printf("%s  ", (char *) dir->dirs[i]->name);
+                printf("%s ", (char *) dir->dirs[i]->name);
             } else {
                 printf("%s\n", (char *) dir->dirs[i]->name);
             }
@@ -88,7 +88,7 @@ int scat(const char *pathname) {
 
     node *file = find(pathname);
     if (find_state == 1) {
-        printf("cat: %s: Is a directory\n", pathname);
+        printf("cat: %s: Not a directory\n", pathname);
         return 1;
     } else if (find_state == 2) {
         printf("cat: %s: No such file or directory\n", pathname);
