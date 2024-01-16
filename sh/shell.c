@@ -173,7 +173,7 @@ void print_env(char *env_str) {
         PathNode *next;
 
         while (current != NULL) {
-            puts(current->path);
+            printf("%s",current->path);
             if (current->next != NULL) {
                 printf(":");
             }
