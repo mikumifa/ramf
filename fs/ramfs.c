@@ -81,8 +81,8 @@ node *getPrePath(const char *pathname) {
 
     //判断前面情况，
     if (find_state == 0) {
-        //最后还要保证
-        if (pre_path_node->type == DIR_NODE) {
+        //最后还要保证,不能是文件
+        if (pre_path_node->type == FILE_NODE) {
             pre_path_state = 1;
             return NULL;
         }
