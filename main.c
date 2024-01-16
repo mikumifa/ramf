@@ -29,7 +29,7 @@ int main() {
     secho("The Environment Variable PATH is:\\$PATH");
     secho("The Environment Variable PATH is:\\$PATH");
     secho("The Environment Variable PATH is:\\$PATH");
-    
+
     close_ramfs();
     close_shell();
     assert(root == NULL);
