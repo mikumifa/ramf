@@ -195,10 +195,6 @@ node *find(const char *pathname) {
         find_state = 2;
         return NULL;
     }
-    if (len == 0) {
-        find_state = 0;
-        return root;
-    }
     node *now_dir = root;
     for (int i = 0; i < len; ++i) {
         if (now_dir->type == FILE_NODE) {
@@ -481,7 +477,8 @@ int runlink(const char *pathname) {
     if (file->type == DIR_NODE)
         return -1;
     node *pre_path_node = getPrePath(pathname);
-    free_node(pre_path_node, file);
+    remove_subdir(pre_path_node, file);
+    return 0;
 }
 
 void init_ramfs() {
