@@ -11,7 +11,7 @@ int main() {
     assert(sls("/home") == 1);
 
     assert(smkdir("/1") == 0);
-    assert(stouch("/2") == 0);
+    assert(stouch("/2.txt") == 0);
     assert(smkdir("/1/1") == 0);
     assert(sls("/1") == 0);
     assert(smkdir("/2") == 0);
