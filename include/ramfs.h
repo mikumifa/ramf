@@ -10,7 +10,7 @@
 #define O_WRONLY 01
 #define O_RDWR 02
 
-#define MAX_PATH_PARTS 100
+#define MAX_PATH_PARTS 1000
 #define FILENAME_MAX 100
 
 
