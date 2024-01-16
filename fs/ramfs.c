@@ -32,7 +32,7 @@ int is_valid_char(char c) {
     return isalnum(c) || c == '.' || c == '/'; // 只允许字母、数字和点号
 }
 
-int is_vaild_str(char *str) {
+int is_vaild_str(const char *str) {
     int len = strlen(str);
     for (int i = 0; i < len; ++i) {
         if (!is_valid_char(str[i]))
