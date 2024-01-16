@@ -14,6 +14,13 @@ int find_state;
 int make_dir_state;
 int pre_path_state;
 
+int have_same_name(const char *name, node *dir) {
+    for (int i = 0; i < dir->dir_num; ++i) {
+        if (strcmp(dir->name, name) == 0)
+            return 0;
+    }
+    return 1;
+}
 
 int is_valid_char(char c) {
     return isalnum(c) || c == '.' || c == '/'; // 只允许字母、数字和点号
@@ -217,6 +224,9 @@ int ropen(const char *pathname, int flags) {
             //能找到pre路径，说明可以分割，找到最后一个
             int len = split_pathname(pathname);
             char *dir_name = parts[len - 1];
+            if (have_same_name(dir_name, pre_path_node)) {
+                return -1; // 存在
+            }
             //添加一个
             node **temp = (node **) malloc(sizeof(node *) * pre_path_node->dir_num + 1);
             int top = 0;
@@ -369,6 +379,7 @@ off_t rseek(int fd, off_t offset, int whence) {
 
 }
 
+
 //make_dir_state
 //正常 0
 //这个绝对地址中包含了一个文件而非目录 1
@@ -401,6 +412,11 @@ int rmkdir(const char *pathname) {
     int len = split_pathname(pathname);
     char *dir_name = parts[len - 1];
 
+
+    if (have_same_name(dir_name, pre_path_node)) {
+        make_dir_state = 3;
+        return -1; // 存在
+    }
     //添加一个
     node **temp = (node **) malloc(sizeof(node *) * pre_path_node->dir_num + 1);
     int top = 0;
