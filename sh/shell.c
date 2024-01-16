@@ -63,7 +63,17 @@ int sls(const char *pathname) {
     } else {
         dir = find(pathname);
     }
-    if (dir == NULL) {
+    int pos = findFirstLastPathPos(pathname);
+    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
+    strncpy(pre_path, pathname, pos);
+    pre_path[pos] = '\0';
+    int state = pathOk(pre_path);
+    free(pre_path);
+
+    if (state == 1) {
+        printf("ls: cannot access '%s': Not a directory\n", pathname);
+        return 1;
+    } else if (state == 2) {
         printf("ls: cannot access '%s': No such file or directory\n", pathname);
         return 1;
     }
@@ -145,11 +155,20 @@ int smkdir(const char *pathname) {
 
 int stouch(const char *pathname) {
     print("touch %s\n", pathname);
-    int fd = ropen(pathname, O_CREAT);
-    if (fd == -1) {
+    int pos = findFirstLastPathPos(pathname);
+    char *pre_path = (char *) malloc(sizeof(char) * (pos + 4));
+    strncpy(pre_path, pathname, pos);
+    pre_path[pos] = '\0';
+    int state = pathOk(pre_path);
+    free(pre_path);
+    if (state == 1) {
+        printf("touch: cannot touch '%s': Not a directory\n", pathname);
+        return 1;
+    } else if (state == 2) {
         printf("touch: cannot touch '%s': No such file or directory\n", pathname);
         return 1;
     }
+    int fd = ropen(pathname, O_CREAT);
     rclose(fd);
     return 0;
 }
