@@ -119,25 +119,7 @@ int smkdir(const char *pathname) {
         printf("mkdir: cannot create directory '%s': No such file or directory\n", pathname);
         return 1;
     }
-    //找到最后一个然后添加最后一个
-    int len = split_pathname(pathname);
-    char *dir_name = parts[len - 1];
-    //添加一个
-    node **temp = (node **) malloc(sizeof(node *) * pre_path_node->dir_num + 1);
-    int top = 0;
-    for (int i = 0; i < pre_path_node->dir_num; ++i) {
-        temp[top++] = pre_path_node->dirs[i];
-    }
-    temp[top] = (node *) malloc(sizeof(node));
-    temp[top]->type = DIR_NODE;
-    temp[top]->dir_num = 0;
-    temp[top]->name = strdup(dir_name);
-    temp[top]->content = NULL;
-    temp[top]->size = 0;
-    temp[top]->dirs = NULL;
-    free(pre_path_node->dirs);
-    pre_path_node->dirs = temp;
-    pre_path_node->dir_num++;
+    rrmdir(pathname);
     return 0;
 }
 
@@ -173,7 +155,7 @@ void print_env(char *env_str) {
         PathNode *next;
 
         while (current != NULL) {
-            printf("%s",current->path);
+            printf("%s", current->path);
             if (current->next != NULL) {
                 printf(":");
             }
