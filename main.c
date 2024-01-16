@@ -24,7 +24,7 @@ int main() {
     // 在main函数中添加以下代码进行测试
     int fd_append;
     fd_append = ropen("/append", O_CREAT);
-    fd_append = ropen("/append",  O_WRONLY | O_APPEND);
+    fd_append = ropen("/append", O_WRONLY | O_APPEND);
     assert(fd_append >= 0);
 
 // 进行写入测试
@@ -33,7 +33,7 @@ int main() {
 
 // 关闭并重新打开文件以进行读取
     assert(rclose(fd_append) == 0);
-    fd_append = ropen("/append", O_RDONLY);
+    fd_append = ropen("/append", O_WRONLY | O_APPEND);
     assert(fd_append >= 0);
 
 // 读取并验证内容
