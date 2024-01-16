@@ -41,6 +41,13 @@ typedef struct FD {
     node *f;
 } FD;
 
+
+extern char parts[MAX_PATH_PARTS][FILENAME_MAX];
+extern int find_state;
+extern int make_dir_state;
+extern int pre_path_state;
+
+
 typedef intptr_t ssize_t; //有符号指针
 typedef uintptr_t size_t; //无符号指针
 typedef long off_t; //偏移量的类型，

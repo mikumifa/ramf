@@ -9,11 +9,10 @@ node *root = NULL;
 
 #define NRFD 4096
 FD fdesc[NRFD];
-
-extern char parts[MAX_PATH_PARTS][FILENAME_MAX];
-extern int find_state;
-extern int make_dir_state;
-extern int pre_path_state;
+char parts[MAX_PATH_PARTS][FILENAME_MAX];
+int find_state;
+int make_dir_state;
+int pre_path_state;
 
 int context_extend(void **content, int size) {
     if (content == NULL || *content == NULL) {
