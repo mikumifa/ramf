@@ -295,7 +295,7 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         return -1;
     if (!(fdesc[fd].flags & O_WRONLY || fdesc[fd].flags & O_RDWR))
         return -1;
-    int offset = fdesc[fd].offset;
+    off_t offset = fdesc[fd].offset;
 
     //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
     if (offset > fdesc[fd].f->size) {
@@ -308,11 +308,13 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
     }
 
     //在扩容到可以存下count
-    fdesc[fd].f->content = realloc(fdesc[fd].f->content, fdesc[fd].f->size + count);
+    if (offset + count >= fdesc[fd].f->size) {
+        fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset + count);
+        fdesc[fd].f->size = offset + count;
+    }
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(char_content + offset, buf, count);
     fdesc[fd].offset += count;
-    fdesc[fd].f->size += count;
     return count; // 返回写入的字节数
 }
 
@@ -325,7 +327,7 @@ ssize_t rread(int fd, void *buf, size_t count) {
     if (fdesc[fd].flags & O_WRONLY) {
         return -1;
     }
-    int offset = fdesc[fd].offset;
+    off_t offset = fdesc[fd].offset;
     int left = fdesc[fd].f->size - offset;
     int read_len = left > count ? count : left;
 

@@ -18,6 +18,13 @@
 #define SEEK_CUR 1
 #define SEEK_END 2
 
+
+
+typedef intptr_t ssize_t; //有符号指针
+typedef uintptr_t size_t; //无符号指针
+typedef long off_t; //偏移量的类型，
+
+
 //在内存文件系统中，你需要一个数据结构来存储一个文件的信息（我们沿用了Linux中“Everything is a file”的设计），
 // 包括这个文件的类型（是普通文件还是目录），名称；如果它是一个普通文件，则它的文件内容、文件大小也值得我们关注；
 // 如果它是一个目录，则它有哪些子节点也值得我们关注。
@@ -36,7 +43,7 @@ typedef struct node {
 
 typedef struct FD {
     bool used; // 对应的文件
-    int offset; //偏移量
+    off_t offset; //偏移量
     int flags; //读写性质（支持对文件进行的操作，例如只读、只写等）
     node *f;
 } FD;
@@ -48,9 +55,6 @@ extern int make_dir_state;
 extern int pre_path_state;
 
 
-typedef intptr_t ssize_t; //有符号指针
-typedef uintptr_t size_t; //无符号指针
-typedef long off_t; //偏移量的类型，
 
 int ropen(const char *pathname, int flags);
 
