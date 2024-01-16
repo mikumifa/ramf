@@ -4,34 +4,45 @@
 #include <stdlib.h>
 #include <assert.h>
 
+int notin(int fd, int *fds, int n) {
+    for (int i = 0; i < n; i++) {
+        if (fds[i] == fd) return 0;
+    }
+    return 1;
+}
+
+int genfd(int *fds, int n) {
+    for (int i = 0; i < 4096; i++) {
+        if (notin(i, fds, n))
+            return i;
+    }
+    return -1;
+}
+
 int main() {
     init_ramfs();
-    init_shell();
-    assert(stouch("/home") == 0);
+    // 在main函数中添加以下代码进行测试
+    int fd_append;
+    fd_append = ropen("/append_test", O_CREAT | O_WRONLY | O_APPEND);
+    assert(fd_append >= 0);
 
-    assert(sls("//////////////////home") == 1);
-    assert(sls(NULL) == 0);
+// 进行写入测试
+    assert(rwrite(fd_append, "hello", 5) == 5);
+    assert(rwrite(fd_append, "world", 5) == 5);
 
-    assert(smkdir("/1") == 0);
-    assert(stouch("/2.txt") == 0);
-    assert(smkdir("/2.txt/1") == 1);
-    assert(smkdir("/2.txt/1") == 1);
-    assert(sls("/2.txt") == 0);
+// 关闭并重新打开文件以进行读取
+    assert(rclose(fd_append) == 0);
+    fd_append = ropen("/append_test", O_RDONLY);
+    assert(fd_append >= 0);
 
-    assert(smkdir("/1/1") == 0);
-    assert(sls("/1") == 0);
-    assert(smkdir("/2") == 0);
-    assert(smkdir("/3") == 0);
-    assert(sls("////") == 0);
-    assert(sls("") == 0);
-    assert(sls("/2") == 0);
-    assert(smkdir("/2/2") == 0);
-    assert(smkdir("/2/1") == 0);
-    assert(sls("/2") == 0);
-    assert(smkdir("/2/1/1") == 0);
-    assert(sls("////2//1//") == 0);
+// 读取并验证内容
+    char read_buf[11];
+    memset(read_buf, 0, sizeof(read_buf));
+    assert(rread(fd_append, read_buf, 10) == 10);
+    assert(memcmp(read_buf, "helloworld", 10) == 0);
 
+// 关闭文件
+    assert(rclose(fd_append) == 0);
 
-    close_shell();
-    close_ramfs();
+    return 0;
 }
