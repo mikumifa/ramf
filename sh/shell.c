@@ -230,7 +230,7 @@ int swhich(const char *cmd) {
         }
         current = current->next;
     }
-    printf("/n");
+    printf("\n");
     return 1;
 }
 
