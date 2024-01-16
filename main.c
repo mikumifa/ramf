@@ -34,6 +34,8 @@ int main() {
     assert((fd[0] = ropen("/dir/file0", O_RDONLY)) >= 0);
     assert((fd[1] = ropen("/dir/subdir/file1", O_RDONLY)) >= 0);
 
+    // 读取并验证数据
+    char read_buf[1024];
 
 
     // 关闭文件
