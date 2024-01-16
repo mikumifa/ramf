@@ -461,7 +461,7 @@ int rmkdir(const char *pathname) {
         return -1; // 存在
     }
     //添加一个
-    node *new_node = create_node(FILE_NODE, dir_name);
+    node *new_node = create_node(DIR_NODE, dir_name);
     add_subdir(pre_path_node, new_node);
     return 0;
 }
