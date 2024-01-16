@@ -1,5 +1,6 @@
 #include "ramfs.h"
 #include "shell.h"
+
 #ifndef ONLINE_JUDGE
 #define print(...) printf("\033[31m");printf(__VA_ARGS__);printf("\033[0m");
 #else
@@ -68,7 +69,7 @@ int sls(const char *pathname) {
     }
 
     if (dir->type == FILE_NODE) {
-        printf("%s\n", dir->name);
+        printf("%s\n", pathname);
         return 0;
     } else {
         int len = dir->dir_num;
