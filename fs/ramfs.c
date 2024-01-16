@@ -170,7 +170,6 @@ node *find(const char *pathname) {
         if (canFind == 0) {
             find_state = 2;
             return NULL;
-
         }
 
     }

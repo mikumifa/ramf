@@ -52,7 +52,7 @@ void clearPath(PathNode **head) {
 
 int sls(const char *pathname) {
     print("ls %s\n", pathname);
-    node *dir;
+    node *dir = NULL;
     if (pathname == NULL || *pathname == '\0') {
         dir = find("/");
     } else {
@@ -66,15 +66,12 @@ int sls(const char *pathname) {
         printf("ls: cannot access '%s': No such file or directory\n", pathname);
         return 1;
     }
-    if (dir == NULL) {
-        printf("ls: cannot access '%s': No such file or directory\n", pathname);
-        return 1;
-    }
+    dir->type = DIR_NODE;
+    return 0;
     if (dir->type == FILE_NODE) {
         printf("%s\n", pathname);
         return 0;
     } else {
-        return 0;
         int len = dir->dir_num;
         for (int i = 0; i < len; ++i) {
             if (i != len - 1) {
