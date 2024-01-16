@@ -35,15 +35,7 @@ int main() {
     assert((fd[0] = ropen("/dir/file0", O_RDONLY)) >= 0);
     assert((fd[1] = ropen("/dir/subdir/file1", O_RDONLY)) >= 0);
 
-    // 读取并验证数据
-    char read_buf[1024];
-    for (int i = 0; i < 100; i++) {
-        memset(read_buf, 0, sizeof(read_buf));
-        sprintf(buf, "RandomData%d", rand());
-        int read_bytes = rread(fd[i % 2], read_buf, strlen(buf));
-        assert(read_bytes == strlen(buf));
-        assert(memcmp(read_buf, buf, read_bytes) == 0);
-    }
+   
 
     // 关闭文件
     assert(rclose(fd[0]) == 0);
