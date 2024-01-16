@@ -86,11 +86,11 @@ void processLine(char *line) {
         if (strstr(pathValue, ":$PATH") != NULL) {
             // 在 PATH 的尾部添加
             *strchr(pathValue, ':') = '\0'; // 移除 ":$PATH"
-            addPathNode(&pathHead, pathValue, 0);
+            addPathNode(&pathHead, pathValue, 1);
         } else if (strstr(pathValue, "$PATH:") == pathValue) {
             // 在 PATH 的首部添加
             pathValue += 6; // 跳过 "$PATH:"
-            addPathNode(&pathHead, pathValue, 1);
+            addPathNode(&pathHead, pathValue, 0);
         } else {
             // 设置新的 PATH 值
             clearPath(&pathHead);
