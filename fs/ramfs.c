@@ -7,7 +7,7 @@
 
 node *root = NULL;
 
-#define NRFD 4096
+#define NRFD 4100
 FD fdesc[NRFD];
 char parts[MAX_PATH_PARTS][FILENAME_MAX];
 int find_state;
