@@ -14,7 +14,7 @@ int main() {
     assert(smkdir("/home/ubuntu") == 0);
     assert(smkdir("/usr") == 0);
     assert(smkdir("/usr/bin") == 0);
-    assert(smkdir("/home/ubuntu/.bashrc") == 0);
+    assert(stouch("/home/ubuntu/.bashrc") == 0);
     rwrite(ropen("/home/ubuntu/.bashrc", O_WRONLY), content, strlen(content));
     rwrite(ropen("/home/ubuntu/.bashrc", O_WRONLY | O_APPEND), ct, strlen(ct));
     scat("/home/ubuntu/.bashrc");
