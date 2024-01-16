@@ -20,7 +20,7 @@ int main() {
     assert(sls("/1") == 0);
     assert(smkdir("/2") == 0);
     assert(smkdir("/3") == 0);
-    assert(sls("/") == 0);
+    assert(sls("////") == 0);
     assert(sls("") == 0);
     assert(sls("/2") == 0);
     assert(smkdir("/2/2") == 0);
