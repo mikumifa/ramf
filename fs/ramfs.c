@@ -242,6 +242,7 @@ int ropen(const char *pathname, int flags) {
         return -1;
     if (flags & O_APPEND) {
 //追加
+        crash();
         node *file = find(pathname);
         if (file == NULL)
             return -1;
@@ -256,7 +257,8 @@ int ropen(const char *pathname, int flags) {
     } else if (flags & O_CREAT) {
 // 创建
 // 读模式
-        crash();
+//test5 不经过
+        //crash();
         node *file = find(pathname);
         if (file == NULL) {
             //不是根目录，如果是的话，绝对可以找到
@@ -290,6 +292,7 @@ int ropen(const char *pathname, int flags) {
 
     } else if (flags & O_TRUNC) {
 // 清空
+//test5不经过
         node *file = find(pathname);
         if (file == NULL)
             return -1;
