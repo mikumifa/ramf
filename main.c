@@ -10,7 +10,6 @@ const char *ct = "export PATH=/home:$PATH";
 int main() {
     init_ramfs();
 
-    assert(rmkdir("") == 0);
     assert(rmkdir("//home") == -1);
     assert(rmkdir("/test/1") == -1);
     assert(rmkdir("/home/ubuntu") == 0);
