@@ -438,13 +438,14 @@ int rmkdir(const char *pathname) {
         crash();
     }
     if (!is_vaild_str(pathname)) {
-        crash();
+        //不经过
         make_dir_state = 2;
         return -1;
     }
 
     node *existing = find(pathname);
     if (existing != NULL) {
+        crash();
         make_dir_state = 3;
         return -1; // 存在
     }
