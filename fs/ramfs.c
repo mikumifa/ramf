@@ -445,8 +445,8 @@ int rmkdir(const char *pathname) {
         make_dir_state = 2;
         return -1;
     }
-    int len = split_pathname(pathname);
-    if (len == -1) {
+    int split_len = split_pathname(pathname);
+    if (split_len == -1) {
         return -1;
     }
     node *existing = find(pathname);
