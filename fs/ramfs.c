@@ -195,6 +195,7 @@ char *strdup(const char *s) {
 
 //如果最后一个带了‘/‘，但是还是
 node *find(const char *pathname) {
+    crash();
     int len = split_pathname(pathname);
     if (len == -1) {
         //路径有问题
@@ -402,12 +403,10 @@ off_t rseek(int fd, off_t offset, int whence) {
 //这个绝对地址中包含了不存在的文件目录 2
 //最终指向的文件/目录已经存在 3
 int rmkdir(const char *pathname) {
-    //crash();
     if (!is_vaild_str(pathname)) {
         make_dir_state = 2;
         return -1;
     }
-
     node *existing = find(pathname);
     if (existing != NULL) {
         make_dir_state = 3;
