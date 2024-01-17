@@ -390,6 +390,10 @@ int rmkdir(const char *pathname) {
         make_dir_state = 2;
         return -1;
     }
+    if (*pathname == '\0')
+        return -1;
+    if (*pathname != '\\')
+        return -1;
     node *existing = find(pathname);
     if (existing != NULL) {
         make_dir_state = 3;
