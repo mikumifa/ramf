@@ -236,7 +236,6 @@ node *find(const char *pathname) {
 
 int ropen(const char *pathname, int flags) {
     //test5 不经过
-    crash();
     if (!is_vaild_str((char *) pathname))
         return -1;
     int path_len = strlen(pathname);
@@ -440,7 +439,6 @@ int rmkdir(const char *pathname) {
     //找到最后一个然后添加最后一个，冷不可能有问题，至少有一个
     int len = split_pathname(pathname);
     char *dir_name = parts[len - 1];
-
     if (strlen(dir_name) > 32)
         return -1;
     if (have_same_name(dir_name, pre_path_node)) {
