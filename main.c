@@ -15,6 +15,7 @@ int main() {
     assert(rmkdir("/test/test") == 0);
     assert(rmkdir("/test/test/test") == 0);
     assert(rmkdir("/test/test/test") == 0);
+    assert(rmkdir("/test/test/test") == 0);
     assert(rmkdir("/usr") == 0);
     assert(rmkdir("/usr/bin") == 0);
     close_ramfs();
