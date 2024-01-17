@@ -434,9 +434,11 @@ off_t rseek(int fd, off_t offset, int whence) {
 int rmkdir(const char *pathname) {
     //crash();
     if (*pathname == '\0') {
+        //test5 不经过
         crash();
     }
     if (!is_vaild_str(pathname)) {
+        crash();
         make_dir_state = 2;
         return -1;
     }
