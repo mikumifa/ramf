@@ -329,7 +329,6 @@ int ropen(const char *pathname, int flags) {
 }
 
 int rclose(int fd) {
-    crash();
     if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
         return -1;
 
@@ -433,7 +432,7 @@ off_t rseek(int fd, off_t offset, int whence) {
 //这个绝对地址中包含了不存在的文件目录 2
 //最终指向的文件/目录已经存在 3
 int rmkdir(const char *pathname) {
-    crash();
+    //crash();
     if (*pathname == '\0') {
         //test5 不经过
         crash();
@@ -481,7 +480,7 @@ int rmkdir(const char *pathname) {
 }
 
 int rrmdir(const char *pathname) {
-    crash();
+
     node *target = find(pathname);
     if (target == NULL) {
         return -1; // 目录不存在
@@ -507,7 +506,6 @@ int rrmdir(const char *pathname) {
 
 //其实就是删除功能
 int runlink(const char *pathname) {
-    crash();
     node *file = find(pathname);
     if (file == NULL)
         return -1;
