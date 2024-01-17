@@ -453,10 +453,11 @@ int rmkdir(const char *pathname) {
     //不是根目录
     node *pre_path_node = getPrePath(pathname);
     if (pre_path_state == 1) {
+        //不会经过
         make_dir_state = 1;
-        crash();
         return -1; // 存在
     } else if (pre_path_state == 2) {
+        //test5 不会经过
         make_dir_state = 2;
         return -1; // 存在
     }
@@ -468,6 +469,7 @@ int rmkdir(const char *pathname) {
 
     if (have_same_name(dir_name, pre_path_node)) {
         make_dir_state = 3;
+        crash();
         return -1; // 存在
     }
     //添加一个
