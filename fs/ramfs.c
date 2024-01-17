@@ -285,7 +285,6 @@ int ropen(const char *pathname, int flags) {
         return fd_top;
 
     } else if (flags & O_TRUNC) {
-        crash();
 // 清空
         node *file = find(pathname);
         if (file == NULL)
@@ -417,6 +416,7 @@ off_t rseek(int fd, off_t offset, int whence) {
 int rmkdir(const char *pathname) {
     if (!is_vaild_str(pathname)) {
         make_dir_state = 2;
+        crash();
         return -1;
     }
     node *existing = find(pathname);
