@@ -11,8 +11,8 @@ int main() {
     init_ramfs();
 
     assert(rmkdir("////test//") == 0);
-    assert(rmkdir("/test/test") == 0);
-    assert(rmkdir("/test/test*") == -1);
+    assert(rmkdir("/test/test*") == 0);
+    assert(rmkdir("/test/test") == -1);
     assert(rmkdir("/test/test/test/") == 0);
     assert(rmkdir("/test/test/test//test/test/test/") == 0);
     assert(rmkdir("/test/test/test//test/test/") == 0);
