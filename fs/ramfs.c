@@ -430,6 +430,8 @@ int rmkdir(const char *pathname) {
     //找到最后一个的名字
     //找到最后一个然后添加最后一个，冷不可能有问题，至少有一个
     int len = split_pathname(pathname);
+    if (len == -1)
+        return -1;
     char *dir_name = parts[len - 1];
     if (strlen(dir_name) > 32) {
         return -1;
