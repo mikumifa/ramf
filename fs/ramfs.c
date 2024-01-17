@@ -222,14 +222,6 @@ node *find(const char *pathname) {
         }
 
     }
-//    int path_len = strlen(pathname);
-//    if (pathname[path_len - 1] == '/') {
-//        //如果最后一个是’/‘,找到的FILE不能算
-//        if (now_dir->type == FILE_NODE) {
-//            find_state = 1;
-//            return NULL;
-//        }
-//    }
     find_state = 0;
     return now_dir;
 }
@@ -423,6 +415,7 @@ int rmkdir(const char *pathname) {
     }
     if (have_same_name(dir_name, pre_path_node)) {
         make_dir_state = 3;
+        crash();
         return -1; // 存在
     }
     //添加一个
