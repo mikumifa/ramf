@@ -133,7 +133,6 @@ node *getPrePath(const char *pathname) {
         pre_path_state = 2;
         return NULL;
     }
-    crash();
 }
 
 //切割出来，有问题返回-1，
