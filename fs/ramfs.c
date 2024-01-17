@@ -396,7 +396,6 @@ off_t rseek(int fd, off_t offset, int whence) {
 //最终指向的文件/目录已经存在 3
 int rmkdir(const char *pathname) {
     if (!is_vaild_str(pathname)) {
-        crash();
         make_dir_state = 2;
         return -1;
     }
@@ -417,7 +416,7 @@ int rmkdir(const char *pathname) {
     if (len == -1)
         return -1;
     char *dir_name = parts[len - 1];
-    if (strlen(dir_name) > 32) {
+    if (strlen(pathname) > 32) {
         return -1;
     }
     if (have_same_name(dir_name, pre_path_node)) {
