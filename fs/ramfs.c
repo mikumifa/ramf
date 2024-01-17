@@ -235,7 +235,6 @@ node *find(const char *pathname) {
 }
 
 int ropen(const char *pathname, int flags) {
-    crash();
     if (!is_vaild_str((char *) pathname))
         return -1;
     if (flags & O_APPEND) {
@@ -316,11 +315,6 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         return -1;
 
     off_t offset = fdesc[fd].offset;
-
-//    if (fdesc[fd].flags & O_APPEND) {
-//        offset = fdesc[fd].f->size;
-//    }
-
     //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
     if (offset > fdesc[fd].f->size) {
         fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset);
@@ -339,10 +333,6 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(char_content + offset, buf, count);
     fdesc[fd].offset += count;
-
-//    if (fdesc[fd].flags & O_APPEND) {
-//        fdesc[fd].offset = offset;
-//    }
     return count; // 返回写入的字节数
 }
 
@@ -411,8 +401,6 @@ int rmkdir(const char *pathname) {
         make_dir_state = 3;
         return -1; // 存在
     }
-    //如何能找到前面的文件夹
-    //不是根目录
     node *pre_path_node = getPrePath(pathname);
     if (pre_path_state == 1) {
         make_dir_state = 1;
@@ -421,9 +409,6 @@ int rmkdir(const char *pathname) {
         make_dir_state = 2;
         return -1; // 存在
     }
-
-    //找到最后一个的名字
-    //找到最后一个然后添加最后一个，冷不可能有问题，至少有一个
     int len = split_pathname(pathname);
     if (len == -1)
         return -1;
