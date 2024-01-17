@@ -12,7 +12,7 @@
 int main() {
     init_ramfs();
     int fd;
-    test(rmkdir, -1, "/000000000000000000000000000000001/");
+    test(rmkdir, -1, "/000000000000000000000000000000001////");
 
     test(rmkdir, 0, "/it");
     test(rmkdir, 0, "/it/has");
