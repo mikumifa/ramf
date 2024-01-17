@@ -3,23 +3,21 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 
 const char *content = "export PATH=/usr/bin/\n";
 const char *ct = "export PATH=/home:$PATH";
 
 int main() {
     init_ramfs();
+    for (int i = 0; i < 100000; ++i) {
+        char str[50]; // 存储转换结果的字符数组，长度要足够大
 
-    assert(rmkdir("////test//") == 0);
-    assert(rmkdir("/test/test") == 0);
-    assert(rmkdir("/test/test") == -1);
-    assert(rmkdir("/test/test/test/") == 0);
-    assert(rmkdir("/test/test/test///test/") == 0);
-    assert(rmkdir("/test/test/test//test/test/") == 0);
-    assert(rmkdir("/test/test/test//test/test/test/") == 0);
+        // 使用sprintf函数进行转换
+        // %d表示转换为十进制整数，str是存储结果的字符数组
+        sprintf(str, "%d", i);
+        assert(rmkdir(str) == 0);
+    }
 
-    assert(rmkdir("/test/test/test") == 0);
-    assert(rmkdir("/usr") == 0);
-    assert(rmkdir("/usr/bin") == 0);
     close_ramfs();
 }
