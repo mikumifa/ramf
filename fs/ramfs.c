@@ -338,9 +338,9 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
 
     off_t offset = fdesc[fd].offset;
 
-    if (fdesc[fd].flags & O_APPEND) {
-        offset = fdesc[fd].f->size;
-    }
+//    if (fdesc[fd].flags & O_APPEND) {
+//        offset = fdesc[fd].f->size;
+//    }
     //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
     if (offset > fdesc[fd].f->size) {
         fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset);
