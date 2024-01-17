@@ -227,7 +227,6 @@ node *find(const char *pathname) {
         //如果最后一个是’/‘,找到的FILE不能算
         if (now_dir->type == FILE_NODE) {
             find_state = 1;
-            crash();
             return NULL;
         }
     }
@@ -336,8 +335,12 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
         return -1;
     if (!(fdesc[fd].flags & O_WRONLY || fdesc[fd].flags & O_RDWR))
         return -1;
+
     off_t offset = fdesc[fd].offset;
 
+    if (fdesc[fd].flags & O_APPEND) {
+        offset = fdesc[fd].f->size;
+    }
     //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
     if (offset > fdesc[fd].f->size) {
         fdesc[fd].f->content = realloc(fdesc[fd].f->content, offset);
