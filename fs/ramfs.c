@@ -285,6 +285,7 @@ int ropen(const char *pathname, int flags) {
         return fd_top;
 
     } else if (flags & O_TRUNC) {
+        crash();
 // 清空
         node *file = find(pathname);
         if (file == NULL)
@@ -452,7 +453,7 @@ int rmkdir(const char *pathname) {
 }
 
 int rrmdir(const char *pathname) {
-    crash();
+
     node *target = find(pathname);
     if (target == NULL) {
         return -1; // 目录不存在
@@ -478,7 +479,6 @@ int rrmdir(const char *pathname) {
 
 //其实就是删除功能
 int runlink(const char *pathname) {
-    crash();
     node *file = find(pathname);
     if (file == NULL)
         return -1;
