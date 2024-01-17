@@ -14,7 +14,9 @@ int main() {
     int fd;
     test(rmkdir, -1, "/000000000000000000000000000000000000000/");
 
+    test(rmkdir, 0, "/it/");
     test(rmkdir, 0, "/it");
+
     test(rmkdir, 0, "/it/has");
     test(rmkdir, 0, "/it/has/been");
     test(rmkdir, 0, "/it/has/been/a");

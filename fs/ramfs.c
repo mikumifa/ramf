@@ -417,7 +417,6 @@ int rmkdir(const char *pathname) {
         return -1;
     char *dir_name = parts[len - 1];
     if (strlen(dir_name) > 32) {
-        crash();
         return -1;
     }
     if (have_same_name(dir_name, pre_path_node)) {
