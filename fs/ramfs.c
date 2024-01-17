@@ -388,7 +388,7 @@ ssize_t rread(int fd, void *buf, size_t count) {
 off_t rseek(int fd, off_t offset, int whence) {
     if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
         return -1;
-    if (fdesc[fd].f->type == DIR_NODE && whence == SEEK_END)
+    if (fdesc[fd].f->type == DIR_NODE)
         return -1;
     int new_offset;
     switch (whence) {
