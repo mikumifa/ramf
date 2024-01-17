@@ -236,7 +236,6 @@ node *find(const char *pathname) {
 
 int ropen(const char *pathname, int flags) {
     //test5 不经过
-    crash();
     if (!is_vaild_str((char *) pathname))
         return -1;
     int path_len = strlen(pathname);
@@ -330,7 +329,8 @@ int ropen(const char *pathname, int flags) {
 }
 
 int rclose(int fd) {
-    if (fd >= NRFD || fdesc[fd].used == 0)
+    crash();
+    if (fd < 0 || fd >= NRFD || fdesc[fd].used == 0)
         return -1;
 
     fdesc[fd].used = 0;
