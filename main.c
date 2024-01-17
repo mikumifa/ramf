@@ -15,7 +15,7 @@ int main() {
 
         // 使用sprintf函数进行转换
         // %d表示转换为十进制整数，str是存储结果的字符数组
-        sprintf(str, "%d", i);
+        sprintf(str, "/%d", i);
         assert(rmkdir(str) == 0);
     }
 
