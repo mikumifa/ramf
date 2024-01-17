@@ -236,15 +236,13 @@ node *find(const char *pathname) {
 
 int ropen(const char *pathname, int flags) {
     //test5 不经过
+    crash();
     if (!is_vaild_str((char *) pathname))
         return -1;
     int path_len = strlen(pathname);
     if (pathname[path_len - 1] == '/')
         return -1;
     if (flags & O_APPEND) {
-//追加
-//test5 不经过
-        //   crash();
         node *file = find(pathname);
         if (file == NULL)
             return -1;
@@ -255,32 +253,20 @@ int ropen(const char *pathname, int flags) {
         fdesc[fd_top].used = 1;//这个属性有用吗？
         return fd_top;
     } else if (flags & O_CREAT) {
-// 创建
-// 读模式
-//test5 不经过
-        //crash();
         node *file = find(pathname);
         if (file == NULL) {
-            //不是根目录，如果是的话，绝对可以找到
             node *pre_path_node = getPrePath(pathname);
             if (pre_path_node == NULL) {
-                //test5 不经过
                 return -1;
             }
-            //找到最后一个然后添加最后一个
-            //能找到pre路径，说明可以分割，找到最后一个
             int len = split_pathname(pathname);
             char *dir_name = parts[len - 1];
             if (have_same_name(dir_name, pre_path_node)) {
                 return -1; // 存在
             }
-            //添加一个
             node *new_node = create_node(FILE_NODE, dir_name);
             add_subdir(pre_path_node, new_node);
             file = new_node;
-        } else {
-            //test5 不经过
-
         }
         int fd_top = find_unuse_fd();
         fdesc[fd_top].flags = flags;
@@ -288,14 +274,10 @@ int ropen(const char *pathname, int flags) {
         fdesc[fd_top].offset = 0;
         fdesc[fd_top].used = 1;//这个属性有用吗？
         return fd_top;
-
     } else if (flags & O_TRUNC) {
-// 清空
-//test5不经过
         node *file = find(pathname);
         if (file == NULL)
             return -1;
-
         if (flags & O_RDWR || flags & O_WRONLY) {
             free(file->content);
             file->content = strdup("");
@@ -311,15 +293,12 @@ int ropen(const char *pathname, int flags) {
         node *file = find(pathname);
         if (file == NULL)
             return -1;
-
         int fd_top = find_unuse_fd();
-
         fdesc[fd_top].flags = flags;
         fdesc[fd_top].f = file;
         fdesc[fd_top].offset = 0;
         fdesc[fd_top].used = 1;//这个属性有用吗？
         return fd_top;
-
     }
 }
 
