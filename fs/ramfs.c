@@ -316,7 +316,7 @@ int ropen(const char *pathname, int flags) {
         node *file = find(pathname);
         if (file == NULL)
             return -1;
- 
+
         int fd_top = find_unuse_fd();
 
         fdesc[fd_top].flags = flags;
