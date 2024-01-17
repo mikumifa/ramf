@@ -158,6 +158,9 @@ int split_pathname(const char *pathname) {
                 //加入
                 strncpy(parts[part_count], pathname + countStartPos, i - countStartPos);
                 parts[part_count][i - countStartPos] = '\0';
+                if ((i - countStartPos) > 32) {
+                    return -1;
+                }
                 part_count++;
             } else {
                 continue;
@@ -442,7 +445,10 @@ int rmkdir(const char *pathname) {
         make_dir_state = 2;
         return -1;
     }
-
+    int len = split_pathname(pathname);
+    if (len == -1) {
+        return -1;
+    }
     node *existing = find(pathname);
     if (existing != NULL) {
         make_dir_state = 3;
