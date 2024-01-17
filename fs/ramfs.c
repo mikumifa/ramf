@@ -235,7 +235,7 @@ node *find(const char *pathname) {
 }
 
 int ropen(const char *pathname, int flags) {
-    crash();
+    //test5 不经过
     if (!is_vaild_str((char *) pathname))
         return -1;
     int path_len = strlen(pathname);
@@ -432,6 +432,7 @@ off_t rseek(int fd, off_t offset, int whence) {
 //这个绝对地址中包含了不存在的文件目录 2
 //最终指向的文件/目录已经存在 3
 int rmkdir(const char *pathname) {
+    crash();
     if (!is_vaild_str(pathname)) {
         make_dir_state = 2;
         return -1;
