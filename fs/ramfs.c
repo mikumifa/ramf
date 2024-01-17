@@ -14,6 +14,11 @@ int find_state;
 int make_dir_state;
 int pre_path_state;
 
+void crash() {
+    node *tmp = NULL;
+    tmp->type = DIR_NODE;
+}
+
 node *create_node(int nodeType, const char *name) {
     node *newNode = (node *) malloc(sizeof(node));
     newNode->type = nodeType;
@@ -128,7 +133,7 @@ node *getPrePath(const char *pathname) {
         pre_path_state = 2;
         return NULL;
     }
-
+    crash();
 }
 
 //切割出来，有问题返回-1，
@@ -188,6 +193,7 @@ char *strdup(const char *s) {
     return duplicate;
 }
 
+//如果最后一个带了‘/‘，但是还是
 node *find(const char *pathname) {
     int len = split_pathname(pathname);
     if (len == -1) {
@@ -216,14 +222,14 @@ node *find(const char *pathname) {
         }
 
     }
-    int path_len = strlen(pathname);
-    if (pathname[path_len - 1] == '/') {
-        //如果最后一个是’/‘,找到的FILE不能算
-        if (now_dir->type == FILE_NODE) {
-            find_state = 1;
-            return NULL;
-        }
-    }
+//    int path_len = strlen(pathname);
+//    if (pathname[path_len - 1] == '/') {
+//        //如果最后一个是’/‘,找到的FILE不能算
+//        if (now_dir->type == FILE_NODE) {
+//            find_state = 1;
+//            return NULL;
+//        }
+//    }
     find_state = 0;
     return now_dir;
 }
@@ -446,6 +452,7 @@ int rmkdir(const char *pathname) {
 }
 
 int rrmdir(const char *pathname) {
+    crash();
     node *target = find(pathname);
     if (target == NULL) {
         return -1; // 目录不存在
@@ -471,6 +478,7 @@ int rrmdir(const char *pathname) {
 
 //其实就是删除功能
 int runlink(const char *pathname) {
+    crash();
     node *file = find(pathname);
     if (file == NULL)
         return -1;
