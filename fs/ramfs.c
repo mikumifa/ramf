@@ -554,7 +554,6 @@ void free_node(node *n) {
 }
 
 void close_ramfs() {
-    crash();
     free_node(root);
     root = NULL;
 }

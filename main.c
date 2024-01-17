@@ -5,24 +5,25 @@
 #include <assert.h>
 #include <stdio.h>
 
-const char *content = "export PATH=/usr/bin/\n";
-const char *ct = "export PATH=/home:$PATH";
-
+char s[105] = "Hello World!\n";
 int main() {
     init_ramfs();
-    for (int i = 0; i < 100000; ++i) {
-        char str[50]; // 存储转换结果的字符数组，长度要足够大
-        // 使用sprintf函数进行转换
-        // %d表示转换为十进制整数，str是存储结果的字符数组
-        sprintf(str, "/%d", i);
-        assert(rmkdir(str) == 0);
-    }
-    for (int i = 0; i < 100000; ++i) {
-        char str[50]; // 存储转换结果的字符数组，长度要足够大
-        // 使用sprintf函数进行转换
-        // %d表示转换为十进制整数，str是存储结果的字符数组
-        sprintf(str, "/%d/%d/", i,i);
-        assert(rmkdir(str) == 0);
-    }
+    init_shell();
+    int fd1 = ropen("/test", O_CREAT | O_RDWR | O_APPEND);
+    rwrite(fd1, s, strlen(s));
+    rseek(fd1, 2, SEEK_SET);
+    rwrite(fd1, s, strlen(s));
+
+    scat("/test");
+
+    int fd2 = ropen("/test", O_TRUNC | O_RDWR);
+
+    scat("/test");
+    rwrite(fd2, s, strlen(s));
+
+    scat("/test");
+
+    close_shell();
     close_ramfs();
+    return 0;
 }
