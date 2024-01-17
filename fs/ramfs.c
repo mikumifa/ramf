@@ -61,7 +61,7 @@ int remove_subdir(node *dir, node *subdir) {
 
 int have_same_name(const char *name, node *dir) {
     for (int i = 0; i < dir->dir_num; ++i) {
-        if (strcmp(dir->name, name) == 0)
+        if (strcmp(dir->dirs[i]->name, name) == 0)
             return 1;
     }
     return 0;
@@ -415,7 +415,6 @@ int rmkdir(const char *pathname) {
     }
     if (have_same_name(dir_name, pre_path_node)) {
         make_dir_state = 3;
-        crash();
         return -1; // 存在
     }
     //添加一个
