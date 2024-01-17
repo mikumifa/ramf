@@ -226,7 +226,6 @@ node *find(const char *pathname) {
     if (pathname[path_len - 1] == '/') {
         //如果最后一个是’/‘,找到的FILE不能算
         if (now_dir->type == FILE_NODE) {
-            crash();
             find_state = 1;
             return NULL;
         }
@@ -455,6 +454,7 @@ int rmkdir(const char *pathname) {
     node *pre_path_node = getPrePath(pathname);
     if (pre_path_state == 1) {
         make_dir_state = 1;
+        crash();
         return -1; // 存在
     } else if (pre_path_state == 2) {
         make_dir_state = 2;
