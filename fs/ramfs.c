@@ -407,11 +407,9 @@ off_t rseek(int fd, off_t offset, int whence) {
 int rmkdir(const char *pathname) {
     //crash();
     if (*pathname == '\0') {
-        //test5 不经过
         crash();
     }
     if (!is_vaild_str(pathname)) {
-        //不经过
         make_dir_state = 2;
         return -1;
     }
@@ -421,16 +419,13 @@ int rmkdir(const char *pathname) {
         make_dir_state = 3;
         return -1; // 存在
     }
-
     //如何能找到前面的文件夹
     //不是根目录
     node *pre_path_node = getPrePath(pathname);
     if (pre_path_state == 1) {
-        //不会经过
         make_dir_state = 1;
         return -1; // 存在
     } else if (pre_path_state == 2) {
-        //test5 不会经过
         make_dir_state = 2;
         return -1; // 存在
     }
@@ -439,8 +434,11 @@ int rmkdir(const char *pathname) {
     //找到最后一个然后添加最后一个，冷不可能有问题，至少有一个
     int len = split_pathname(pathname);
     char *dir_name = parts[len - 1];
-    if (strlen(dir_name) > 32)
+    if (strlen(dir_name) > 32) {
+        crash();
         return -1;
+
+    }
     if (have_same_name(dir_name, pre_path_node)) {
         //test5 会经过
         make_dir_state = 3;
