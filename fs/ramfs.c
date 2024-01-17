@@ -238,9 +238,6 @@ int ropen(const char *pathname, int flags) {
     //test5 不经过
     if (!is_vaild_str((char *) pathname))
         return -1;
-    int path_len = strlen(pathname);
-    if (pathname[path_len - 1] == '/')
-        return -1;
     if (flags & O_APPEND) {
         node *file = find(pathname);
         if (file == NULL)
