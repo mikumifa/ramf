@@ -358,8 +358,9 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
     }
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(char_content + offset, buf, count);
-    if (!(fdesc[fd].flags & O_APPEND)) {
-        fdesc[fd].offset += count;
+    fdesc[fd].offset += count;
+    if (fdesc[fd].flags & O_APPEND) {
+        fdesc[fd].offset -= count;
     }
     return count; // 返回写入的字节数
 }
