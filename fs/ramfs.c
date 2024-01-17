@@ -158,9 +158,6 @@ int split_pathname(const char *pathname) {
                 //加入
                 strncpy(parts[part_count], pathname + countStartPos, i - countStartPos);
                 parts[part_count][i - countStartPos] = '\0';
-                if ((i - countStartPos) > 32) {
-                    return -1;
-                }
                 part_count++;
             } else {
                 continue;
@@ -179,8 +176,6 @@ int split_pathname(const char *pathname) {
     }
     if (isInCount) {
         strcpy(parts[part_count++], pathname + countStartPos);
-        if (strlen(parts[part_count - 1]) > 32)
-            return -1;
     }
     return part_count;
 }
@@ -442,10 +437,6 @@ int rmkdir(const char *pathname) {
         make_dir_state = 2;
         return -1;
     }
-    int split_len = split_pathname(pathname);
-    if (split_len == -1) {
-        return -1;
-    }
 
     node *existing = find(pathname);
     if (existing != NULL) {
@@ -471,6 +462,8 @@ int rmkdir(const char *pathname) {
     int len = split_pathname(pathname);
     char *dir_name = parts[len - 1];
 
+    if (strlen(dir_name) > 32)
+        return -1;
     if (have_same_name(dir_name, pre_path_node)) {
         //test5 会经过
         make_dir_state = 3;
