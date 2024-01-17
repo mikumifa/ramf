@@ -256,12 +256,15 @@ int ropen(const char *pathname, int flags) {
     } else if (flags & O_CREAT) {
 // 创建
 // 读模式
+        crash();
         node *file = find(pathname);
         if (file == NULL) {
             //不是根目录，如果是的话，绝对可以找到
             node *pre_path_node = getPrePath(pathname);
-            if (pre_path_node == NULL)
+            if (pre_path_node == NULL) {
+                //test5 不经过
                 return -1;
+            }
             //找到最后一个然后添加最后一个
             //能找到pre路径，说明可以分割，找到最后一个
             int len = split_pathname(pathname);
@@ -274,7 +277,7 @@ int ropen(const char *pathname, int flags) {
             add_subdir(pre_path_node, new_node);
             file = new_node;
         } else {
-            crash();
+            //test5 不经过
             if (file->type == DIR_NODE)
                 return -1;
         }
