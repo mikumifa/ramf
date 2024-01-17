@@ -434,10 +434,8 @@ int rmkdir(const char *pathname) {
     //找到最后一个然后添加最后一个，冷不可能有问题，至少有一个
     int len = split_pathname(pathname);
     char *dir_name = parts[len - 1];
-    if (strlen(dir_name) > 32) {
-        crash();
+    if (strlen(dir_name) >= 32) {
         return -1;
-
     }
     if (have_same_name(dir_name, pre_path_node)) {
         //test5 会经过
