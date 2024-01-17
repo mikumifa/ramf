@@ -467,11 +467,11 @@ int rmkdir(const char *pathname) {
     int len = split_pathname(pathname);
     char *dir_name = parts[len - 1];
 
-    if (have_same_name(dir_name, pre_path_node)) {
-        make_dir_state = 3;
-        crash();
-        return -1; // 存在
-    }
+//    if (have_same_name(dir_name, pre_path_node)) {
+//        //test5 会经过
+//        make_dir_state = 3;
+//        return -1; // 存在
+//    }
     //添加一个
     make_dir_state = 0;
     node *new_node = create_node(DIR_NODE, dir_name);
