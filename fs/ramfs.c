@@ -253,8 +253,6 @@ int ropen(const char *pathname, int flags) {
         node *file = find(pathname);
         if (file == NULL)
             return -1;
-        if (file->type == DIR_NODE)
-            return -1;
         int fd_top = find_unuse_fd();
         fdesc[fd_top].flags = flags;
         fdesc[fd_top].f = file;
@@ -287,8 +285,7 @@ int ropen(const char *pathname, int flags) {
             file = new_node;
         } else {
             //test5 不经过
-            if (file->type == DIR_NODE)
-                return -1;
+
         }
         int fd_top = find_unuse_fd();
         fdesc[fd_top].flags = flags;
@@ -303,8 +300,7 @@ int ropen(const char *pathname, int flags) {
         node *file = find(pathname);
         if (file == NULL)
             return -1;
-        if (file->type == DIR_NODE)
-            return -1;
+
         if (flags & O_RDWR || flags & O_WRONLY) {
             free(file->content);
             file->content = strdup("");
@@ -320,8 +316,7 @@ int ropen(const char *pathname, int flags) {
         node *file = find(pathname);
         if (file == NULL)
             return -1;
-        if (file->type == DIR_NODE)
-            return -1;
+ 
         int fd_top = find_unuse_fd();
 
         fdesc[fd_top].flags = flags;
