@@ -274,6 +274,7 @@ int ropen(const char *pathname, int flags) {
             add_subdir(pre_path_node, new_node);
             file = new_node;
         } else {
+            crash();
             if (file->type == DIR_NODE)
                 return -1;
         }
@@ -338,9 +339,9 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
 
     off_t offset = fdesc[fd].offset;
 
-    if (fdesc[fd].flags & O_APPEND) {
-        offset = fdesc[fd].f->size;
-    }
+//    if (fdesc[fd].flags & O_APPEND) {
+//        offset = fdesc[fd].f->size;
+//    }
 
     //先扩容到偏移量刚刚不满足，size和offect一样，如果size不够的话
     if (offset > fdesc[fd].f->size) {
@@ -360,9 +361,10 @@ ssize_t rwrite(int fd, const void *buf, size_t count) {
     char *char_content = (char *) fdesc[fd].f->content;
     memcpy(char_content + offset, buf, count);
     fdesc[fd].offset += count;
-    if (fdesc[fd].flags & O_APPEND) {
-        fdesc[fd].offset = offset;
-    }
+
+//    if (fdesc[fd].flags & O_APPEND) {
+//        fdesc[fd].offset = offset;
+//    }
     return count; // 返回写入的字节数
 }
 
