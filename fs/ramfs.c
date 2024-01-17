@@ -195,7 +195,6 @@ char *strdup(const char *s) {
 
 //如果最后一个带了‘/‘，但是还是
 node *find(const char *pathname) {
-    crash();
     int len = split_pathname(pathname);
     if (len == -1) {
         //路径有问题
@@ -236,7 +235,7 @@ node *find(const char *pathname) {
 }
 
 int ropen(const char *pathname, int flags) {
-    //test5 不经过
+    crash();
     if (!is_vaild_str((char *) pathname))
         return -1;
     if (flags & O_APPEND) {
