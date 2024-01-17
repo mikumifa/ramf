@@ -438,7 +438,6 @@ int rmkdir(const char *pathname) {
         return -1;
     }
     if (have_same_name(dir_name, pre_path_node)) {
-        //test5 会经过
         make_dir_state = 3;
         return -1; // 存在
     }
